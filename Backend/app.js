@@ -9,6 +9,22 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
+// mysql test
+const mysql = require('mysql');
+const pool = mysql.createPool({
+  host: 'localhost',
+  port: "3306",
+  user: 'admin',
+  password: 'mypass',
+  database: 'mysql',
+  multipleStatements: true
+});
+
+pool.query('show databases;', function (error, results, fields) {
+  if (error) throw error;
+  console.log('The solution is: ', JSON.stringify(results));
+});
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
