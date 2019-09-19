@@ -19,7 +19,6 @@ class SiteHeader extends Component {
                             <li className="menu-item"><a href="contact.html">Contact</a></li>
                         </ul>
                     </div>
-
                     <div className="mobile-navigation"></div>
                 </div>
             </header>
