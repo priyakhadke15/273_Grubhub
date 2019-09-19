@@ -5,7 +5,7 @@ class SiteHeader extends Component {
         return (
             <header className="site-header">
                 <div className="container">
-                    <a href="index.html" id="branding" class="pull-left">
+                    <a href="index.html" id="branding" className="pull-left">
                         <i className="icon-cupcake logo"></i>
                         <h1 className="site-title">Name Surname</h1>
                     </a>
