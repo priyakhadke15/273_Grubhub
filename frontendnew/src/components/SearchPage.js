@@ -7,9 +7,8 @@ class SearchPage extends Component {
                 <div className="container" />
                 <figure><img src="dummy/cooking.png" alt="cooking" /></figure>
                 <div className="category-content">
-                    <h1 className="category-title">Lorem ipsum dolor sit</h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At autem aperiam ab, rem dignissimos ducimus soluta culpa veritatis consequuntur asperiores, ad cum, ipsum quidem harum error dolores quia eius quae.</p>
-                    <a href="#" className="button">Read more</a>
+                    <h1 className="category-title">PickUp or Delivery from nearby restaurants</h1>
+                    <p>Find meals easily with variety of local menus near to you.Explore great food with ease.</p>
                 </div>
             </div>
         )

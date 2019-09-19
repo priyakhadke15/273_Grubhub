@@ -9,7 +9,7 @@ class PastOrderPage extends Component {
                     <div className="category-content">
                         <h1 className="category-title">Nam libero tempore</h1>
                         <p>Dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum.</p>
-                        <a href="#" class="button">Read more</a>
+                        <a href="#" className="button">Read more</a>
                     </div>
                 </div>
             </div>
