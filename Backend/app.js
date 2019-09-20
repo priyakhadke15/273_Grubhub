@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -28,6 +29,10 @@ pool.query('show databases;', function (error, results, fields) {
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+//use cors to allow cross origin resource sharing
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+
 
 app.use(logger('dev'));
 app.use(express.json());
