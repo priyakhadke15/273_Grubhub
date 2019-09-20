@@ -1,12 +1,10 @@
-.App {
-  text-align: center;
+
+.Login-form {
+  height: 100%; 
+  margin-Left: 400px;
+  align-Items: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
-}
 
 .App-header {
   background-color: #282c34;
@@ -19,18 +17,12 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+
+.mainlogo{
+  height: 200px; 
+  width: 200px
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 /*!
  * Project_Name: Themezy Diatecian Template
  * Author: Themezy
@@ -40,11 +32,11 @@
 /*===========================================  Importing CSS Libraries ===========================================*/
 article, aside, details, figcaption, figure, footer, header, hgroup, nav, section, summary { display: block; }
 
-audio, canvas, video { display: inline-block; }
+
 
 audio:not([controls]) { display: none; height: 0; }
 
-[hidden], template { display: none; }
+
 
 html { background: #fff; color: #000; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
 

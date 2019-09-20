@@ -4,7 +4,7 @@ class SiteDescription extends Component {
         return (
             <div className="hero">
                 <div className="container">
-                    <i className="icon-cupcake logo"></i>
+                    <img className="mainlogo" src="/cupcake.jpg" alt="" ></img>
                     <h1 className="site-title">GrubHub</h1>
                     <small className="site-description">Want to order food ?</small>
                 </div>
