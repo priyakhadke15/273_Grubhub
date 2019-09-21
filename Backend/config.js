@@ -1,5 +1,7 @@
 module.exports = {
     jwtsecret: "",
+    encrAlgorithm: "",
+    encrSecret: "",
     sql_host: '',
     sql_port: "",
     sql_user: '',

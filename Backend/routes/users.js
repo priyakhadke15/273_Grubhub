@@ -1,9 +1,89 @@
 var express = require('express');
 var router = express.Router();
+const uuidv4 = require('uuid/v4');
+const jwt = require("jsonwebtoken");
+const crypto = require('crypto');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+const { jwtsecret, encrAlgorithm, encrSecret } = require('../config');
+const { getPersons, savePerson } = require('../DAL')
+
+// crypto (can be updated to use 'bcrypt' instead)
+const _encrypt = password => {
+  const cipher = crypto.createCipher(encrAlgorithm, encrSecret);
+  let ciphered = cipher.update(password, 'utf8', 'hex');
+  ciphered += cipher.final('hex');
+  return ciphered;
+};
+
+const _decrypt = encrypted => {
+  const decipher = crypto.createDecipher(encrAlgorithm, encrSecret);
+  let deciphered = decipher.update(encrypted, 'hex', 'utf8');
+  deciphered += decipher.final('utf8');
+  return deciphered;
+};
+
+
+// get all users (test route)
+router.get('/', async function (req, res, next) {
+  try {
+    const { results } = await getPersons();
+    res.json(results);
+  } catch (e) {
+    res.status(500).send(e.message || e);
+  }
+});
+
+// save user (signup)
+router.post('/', async (req, res, next) => {
+  const { email, password, firstName, lastName, profileImage, isSeller } = req.body;
+  // make sure mandatory keys are present
+  if (!(email && password && firstName && lastName && isSeller)) {
+    console.error('save users, mandatory info missing');
+    return res.status(400).send();
+  }
+
+  const person = {
+    id: uuidv4(),
+    isSeller: isSeller === "true",
+    password: _encrypt(password),
+    email, firstName, lastName, profileImage
+  }
+  try {
+    const { results } = await savePerson(person);
+    res.json(results);
+  } catch (e) {
+    console.error('error creating a new user', e);
+    res.status(500).send(e.message || e);
+  }
+});
+
+// login
+router.post('/login', async (req, res, next) => {
+  const { email, password } = req.body;
+  if (!(email && password)) {
+    console.error('login, email/password missing');
+    return res.status(400).send();
+  }
+
+  try {
+    const { results } = await getPersons({ email, password: _encrypt(password) });
+    if (results.length == 1) {
+      const user = results[0];
+      const authCookie = jwt.sign({
+        id: user.id,
+        email: user.email,
+        isSeller: user.isSeller === 1
+      }, jwtsecret, { expiresIn: "7d" });
+      res.cookie('authCookie', authCookie, { maxAge: 900000, httpOnly: true, path: '/' });
+      return res.json(user);
+    } else {
+      console.error('login, no user found: bad credentials');
+      return res.status(400).send();
+    }
+  } catch (e) {
+    console.error('error in login', e);
+    res.status(500).send(e.message || e);
+  }
 });
 
 module.exports = router;

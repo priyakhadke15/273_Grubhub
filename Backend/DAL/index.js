@@ -4,8 +4,8 @@ const { sql_host, sql_port, sql_user, sql_password, sql_database } = require('..
 
 const { createTables } = require('./init');
 const { getPersons, savePerson } = require('./persons');
-const { getItems } = require('./items');
-const { getRestaurants } = require('./restaurants');
+const { getItems, saveItem } = require('./items');
+const { getRestaurants, saveRestaurant } = require('./restaurants');
 
 const pool = mysql.createPool({
     host: sql_host,
@@ -30,9 +30,9 @@ const _createTables = async () => {
     return createTables(conn);
 };
 
-const _getPersons = async id => {
+const _getPersons = async whereClause => {
     const conn = await getConnection();
-    return getPersons(conn)(id);
+    return getPersons(conn)(whereClause);
 };
 
 const _savePerson = async person => {
@@ -45,34 +45,27 @@ const _getItems = async id => {
     return getItems(conn)(id);
 };
 
+const _saveItem = async item => {
+    const conn = await getConnection();
+    return saveItem(conn)(item);
+};
+
 const _getRestaurants = async id => {
     const conn = await getConnection();
     return getRestaurants(conn)(id);
 };
 
-(async () => {
-    try {
-        // const createFakePerson = () => ({
-        //     id: faker.random.uuid(),
-        //     email: faker.internet.email(),
-        //     password: faker.internet.password(),
-        //     firstName: faker.name.firstName(),
-        //     lastName: faker.name.lastName(),
-        //     profileImage: faker.image.avatar(),
-        //     isSeller: false
-        // });
-        // await _savePerson(createFakePerson());
-        const { results, fields } = await _getPersons();
-        console.log(JSON.stringify(results, null, 4))
-    } catch (e) {
-        console.error('error getting persons', e);
-    }
-})();
+const _saveRestaurant = async restaurant => {
+    const conn = await getConnection();
+    return saveRestaurant(conn)(restaurant);
+};
 
 module.exports = {
     createTables: _createTables,
     getPersons: _getPersons,
     savePerson: _savePerson,
     getItems: _getItems,
-    getRestaurants: _getRestaurants
+    saveItem: _saveItem,
+    getRestaurants: _getRestaurants,
+    saveRestaurant: _saveRestaurant
 };
