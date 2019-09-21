@@ -4,27 +4,26 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
+const { initDb } = require('./config');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
 
-// mysql test
-const mysql = require('mysql');
-const pool = mysql.createPool({
-  host: 'localhost',
-  port: "3306",
-  user: 'admin',
-  password: 'mypass',
-  database: 'mysql',
-  multipleStatements: true
-});
+const { createTables } = require('./DAL');
 
-pool.query('show databases;', function (error, results, fields) {
-  if (error) throw error;
-  console.log('The solution is: ', JSON.stringify(results));
-});
+// create tables if db is not initialized
+if (initDb) {
+  (async () => {
+    try {
+      const { results } = await createTables();
+      console.log(JSON.stringify(results, null, 4));
+    } catch (e) {
+      console.error('error in db init', e);
+    }
+  })();
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
