@@ -17,9 +17,9 @@ const getRestaurants = connection => id => {
 };
 
 const saveRestaurant = connection => restaurant => {
-    const { restaurantId, ownerId, image, address, cuisine, zipcode } = restaurant;
-    let query = `insert into ${_tableName} (restaurantId, ownerId, image, address, cuisine, zipcode)` +
-        `VALUES ('${restaurantId}', '${ownerId}', '${image}', '${address}', '${cuisine}', '${zipcode}');`;
+    const { restaurantId, ownerId, name, image, address, cuisine, zipcode } = restaurant;
+    let query = `insert into ${_tableName} (restaurantId, ownerId, name, image, address, cuisine, zipcode)` +
+        `VALUES ('${restaurantId}', '${ownerId}','${name}', '${image}', '${address}', '${cuisine}', '${zipcode}');`;
     return new Promise((resolve, reject) => {
         connection.query(query, (error, results, fields) => {
             // release connection first!

@@ -6,6 +6,7 @@ const crypto = require('crypto');
 
 const { jwtsecret, encrAlgorithm, encrSecret } = require('../config');
 const { getPersons, savePerson } = require('../DAL')
+const { saveRestaurant } = require('../DAL')
 
 // crypto (can be updated to use 'bcrypt' instead)
 const _encrypt = password => {
@@ -35,24 +36,47 @@ router.get('/', async function (req, res, next) {
 
 // save user (signup)
 router.post('/', async (req, res, next) => {
-  const { email, password, firstName, lastName, profileImage, isSeller } = req.body;
+  const { email, password, firstName, lastName, profileImage, isSeller, restName, restZipCode } = req.body;
+
   // make sure mandatory keys are present
   if (!(email && password && firstName && lastName && isSeller)) {
-    console.error('save users, mandatory info missing');
+    console.error('save users, mandatory buyer info missing');
     return res.status(400).send();
+  }
+  //check mandatory seller keys are present
+  let restaurant = null;
+  if (isSeller === "true") {
+    if (!(restName && restZipCode)) {
+      console.error('save users, mandatory seller info missing');
+      return res.status(400).send();
+    }
+    else {
+      restaurant = {
+        restaurantId: uuidv4(),
+        ownerId: uuidv4(),
+        name: restName,
+        address: '',
+        cuisine: '',
+        image: '',
+        zipcode: restZipCode
+      }
+    }
   }
 
   const person = {
-    id: uuidv4(),
+    id: restaurant ? restaurant.ownerId : uuidv4(),
     isSeller: isSeller === "true",
     password: _encrypt(password),
     email, firstName, lastName, profileImage
   }
   try {
     const { results } = await savePerson(person);
+    if (isSeller === "true") {
+      await saveRestaurant(restaurant);
+    }
     res.json(results);
   } catch (e) {
-    console.error('error creating a new user', e);
+    console.error('error creating a new user or restaurant', e);
     res.status(500).send(e.message || e);
   }
 });
