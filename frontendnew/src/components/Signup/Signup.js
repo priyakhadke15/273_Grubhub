@@ -6,7 +6,8 @@ class Signup extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isSeller: false
+            isSeller: false,
+            message: ''
         }
         this.firstnameRef = React.createRef();
         this.lastnameRef = React.createRef();
@@ -19,18 +20,43 @@ class Signup extends Component {
 
     toggleIsSeller = () => this.setState({isSeller: !this.state.isSeller});
 
-    onSubmit = e => {
+    onSubmit = async e => {
         e.preventDefault();
+        if(this.passwordRef.current.value !== this.retypepasswordRef.current.value) {
+            this.setState({message: 'passwords do not match'});
+            return;
+        }
         const person = {
-            firstname: this.firstnameRef.current.value,
-            lastname: this.lastnameRef.current.value,
+            firstName: this.firstnameRef.current.value,
+            lastName: this.lastnameRef.current.value,
             email: this.emailRef.current.value,
             password: this.passwordRef.current.value,
             isSeller: this.state.isSeller,
-            restaurantname: this.restaurantnameRef.current.value,
-            restaurantzipcode: this.restaurantzipcodeRef.current.value
+            restName: this.restaurantnameRef.current.value,
+            restZipCode: this.restaurantzipcodeRef.current.value
         };
-        console.log(person)
+        const sleep = msec => new Promise(r => setTimeout(r, msec));
+        this.props.toggleSpinner('Creating account...');
+        try {
+            const response = await fetch('/api/v1/users', {
+                method: 'post',
+                mode: "cors",
+                redirect: 'follow',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(person)
+            });
+            const body = await response.json();
+            console.log(body);
+            await sleep(2000);
+            this.props.toggleSpinner();
+            this.setState({ message: response.status === 200 ? 'account created successfully! please login to continue...' : body.message });
+        } catch(e) {
+            await sleep(2000);
+            this.props.toggleSpinner();
+            this.setState({ message: e.message || e });
+        }
     };
 
     render() {
@@ -59,8 +85,9 @@ class Signup extends Component {
                         </div>
                     </div>
                     <div className="bottondiv" style={{width:"50%",margin:"0 auto"}}>
-                        <Link to="/login">Have account,login here</Link>
+                        <Link to="/login">Already have an account? login here</Link>
                         <input type="submit" value="Create Account" />
+                        <pre>{this.state.message}</pre>
                     </div>
                 </div>
             </form>

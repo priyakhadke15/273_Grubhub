@@ -36,19 +36,20 @@ router.get('/', async function (req, res, next) {
 
 // save user (signup)
 router.post('/', async (req, res, next) => {
-  const { email, password, firstName, lastName, profileImage, isSeller, restName, restZipCode } = req.body;
+  const { email, password, firstName, lastName, profileImage, restName, restZipCode } = req.body;
+  const isSeller = req.body.isSeller === 'true' || req.body.isSeller === true;
 
   // make sure mandatory keys are present
-  if (!(email && password && firstName && lastName && isSeller)) {
+  if (!(email && password && firstName && lastName)) {
     console.error('save users, mandatory buyer info missing');
-    return res.status(400).send();
+    return res.status(400).json({message: "mandatory buyer info missing"});
   }
   //check mandatory seller keys are present
   let restaurant = null;
-  if (isSeller === "true") {
+  if (isSeller) {
     if (!(restName && restZipCode)) {
       console.error('save users, mandatory seller info missing');
-      return res.status(400).send();
+      return res.status(400).json({message: 'mandatory seller info missing '});
     }
     else {
       restaurant = {
@@ -65,19 +66,16 @@ router.post('/', async (req, res, next) => {
 
   const person = {
     id: restaurant ? restaurant.ownerId : uuidv4(),
-    isSeller: isSeller === "true",
     password: _encrypt(password),
-    email, firstName, lastName, profileImage
+    isSeller, email, firstName, lastName, profileImage
   }
   try {
     const { results } = await savePerson(person);
-    if (isSeller === "true") {
-      await saveRestaurant(restaurant);
-    }
+    isSeller && (await saveRestaurant(restaurant));
     res.json(results);
   } catch (e) {
     console.error('error creating a new user or restaurant', e);
-    res.status(500).send(e.message || e);
+    res.status(500).json({message: e.message || e});
   }
 });
 
