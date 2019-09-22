@@ -8,24 +8,51 @@ import Login from './Login/Login';
 import Account from './Account';
 import SearchPage from './SearchPage';
 import { Route } from 'react-router-dom';
+import LoadingOverlay from 'react-loading-overlay';
 
 class Main extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            showSpinner: false,
+            spinnerText: 'Loading...'
+        };
+    }
+
+    toggleSpinner = spinnerText => this.setState({
+        showSpinner: !this.state.showSpinner,
+        spinnerText: spinnerText || this.state.spinnerText
+    })
+
     render() {
         return (
-            <div className="homepage">
-                <div id="site-content">
-                    <Route path="/" component={NavBar} />
-                    <Route path="/signup" component={Signup} />
-                    <Route path="/Home" component={Home} />
-                    <Route path="/login" component={Login} />
-                    <Route path="/SearchPage" component={SearchPage} />
-                    <Route path="/Account" component={Account} />
+            <LoadingOverlay
+                active={this.state.showSpinner}
+                spinner
+                text={this.state.spinnerText}
+                >
+                <div className="homepage">
+                    <div id="site-content">
+                        <Route path="/" component={NavBar} />
+                        <Route
+                            path="/signup"
+                            render={props => <Signup {...props} toggleSpinner={this.toggleSpinner.bind(this)} />}
+                        />
+                        <Route
+                            path="/login"
+                            render={props => <Login {...props} toggleSpinner={this.toggleSpinner.bind(this)} />}
+                        />
+                        <Route path="/Home" component={Home} />
+                        <Route path="/SearchPage" component={SearchPage} />
+                        <Route path="/Account" component={Account} />
+                    </div>
+                    <SiteFooter />
+                    <script src="js/jquery-1.11.1.min.js"></script>
+                    <script src="js/plugins.js"></script>
+                    <script src="js/app.js"></script>
                 </div>
-                <SiteFooter />
-                <script src="js/jquery-1.11.1.min.js"></script>
-                <script src="js/plugins.js"></script>
-                <script src="js/app.js"></script>
-            </div>
+            </LoadingOverlay>
         )
     }
 }

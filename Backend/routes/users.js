@@ -86,7 +86,7 @@ router.post('/login', async (req, res, next) => {
   const { email, password } = req.body;
   if (!(email && password)) {
     console.error('login, email/password missing');
-    return res.status(400).send();
+    return res.status(400).json({message: "invalid credentials"});
   }
 
   try {
@@ -102,11 +102,11 @@ router.post('/login', async (req, res, next) => {
       return res.json(user);
     } else {
       console.error('login, no user found: bad credentials');
-      return res.status(400).send();
+      return res.status(400).json({message: "bad credentials"});
     }
   } catch (e) {
     console.error('error in login', e);
-    res.status(500).send(e.message || e);
+    res.status(500).json({message: e.message || e});
   }
 });
 

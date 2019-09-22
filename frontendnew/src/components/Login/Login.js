@@ -20,12 +20,13 @@ class Login extends Component {
     }
 
     submitLogin = (e) => {
+        const sleep = msec => new Promise(r => setTimeout(r, msec));
         e.preventDefault();
         const data = {
             email: this.state.username,
             password: this.state.password
         }
-        console.log("within submit login");
+        this.props.toggleSpinner("Logging you in....");
         fetch('/api/v1/users/login', {
             method: 'post',
             mode: "cors",
@@ -37,23 +38,18 @@ class Login extends Component {
         }).then(async function (response) {
             const body = await response.json();
             return { status: response.status, body };
-        }).then(function (response) {
-            if (response.status === 200) {
-                this.setState({
-                    authFlag: true,
-                    msg: response.body.message
-                })
-            }
-            else {
-                this.setState({
-                    authFlag: false,
-                    msg: response.body.message
-                })
-            }
-        }.bind(this))
-            .catch(function (err) {
-                console.log(err)
+        }).then(async response => {
+            await sleep(2000);
+            this.props.toggleSpinner();
+            this.setState({
+                authFlag: response.status === 200,
+                msg: response.body.message
             });
+        }).catch(async err => {
+            await sleep(2000);
+            this.props.toggleSpinner();
+            console.log(err)
+        });
     }
 
     usernameChangeHandler = (e) => {
