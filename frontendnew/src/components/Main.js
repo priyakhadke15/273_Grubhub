@@ -3,8 +3,8 @@ import SiteHeader from './LandingPage/SiteHeader';
 import SiteFooter from './LandingPage/SiteFooter';
 import NavBar from './LandingPage/NavBar'
 import Home from './LandingPage/Home';
-import SignIn from './SignIn';
-import Login from './Login';
+import Signup from './Signup/Signup';
+import Login from './Login/Login';
 import Account from './Account';
 import SearchPage from './SearchPage';
 import { Route } from 'react-router-dom';
@@ -15,9 +15,9 @@ class Main extends Component {
             <div className="homepage">
                 <div id="site-content">
                     <Route path="/" component={NavBar} />
-                    <Route path="/SignIn" component={SignIn} />
+                    <Route path="/signup" component={Signup} />
                     <Route path="/Home" component={Home} />
-                    <Route path="/Login" component={Login} />
+                    <Route path="/login" component={Login} />
                     <Route path="/SearchPage" component={SearchPage} />
                     <Route path="/Account" component={Account} />
                 </div>

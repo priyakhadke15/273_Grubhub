@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Link, Route } from 'react-router-dom';
+import './Login.css';
+import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
-import cookie from 'react-cookies';
+// import cookie from 'react-cookies';
 
 class Login extends Component {
     constructor(props) {
@@ -68,35 +69,21 @@ class Login extends Component {
     }
 
     render() {
-        //redirect based on successful login
-        let redirectVar = null;
-        // let msgBar = null;
-
-        if (this.state.authFlag) {
-            redirectVar = <Redirect to="/Home" />
-        }
-        // else
-        //     msgBar = "Invalid Credentials";
-
         return (
             <div>
-                {redirectVar}
-                < div className="contact-form" >
-                    <div className="row">
-                        <div className='Login-form'>
-                            <div className="col-md-5">
-                                <form onSubmit={this.submitLogin}>
-                                    <input type="email" placeholder="Email" onChange={this.usernameChangeHandler} name="username" required autoFocus />
-                                    <input type="password" placeholder="Password" onChange={this.passwordChangeHandler} name="password" required />
-                                    <input type="submit" value="Login" />
-                                    <Link to="/SignIn">No account, create here</Link>
-                                </form>
-                                {this.state.msg}
-                            </div>
-                        </div>
-                    </div>
+                {this.state.authFlag ? <Redirect to="/Home" /> : null}
+                < div className="contact-form"  >
+                    <form onSubmit={this.submitLogin}>
+                        <input type="email" placeholder="Email" onChange={this.usernameChangeHandler} name="username" required autoFocus />
+                        <input type="password" placeholder="Password" onChange={this.passwordChangeHandler} name="password" required />
+                        <input type="submit" value="Login" />
+                        <Link to="/signup">Create Account</Link>
+                    </form>
+                    <pre>{this.state.msg}</pre>
                 </div >
             </div>
         );
     }
-} export default Login;
+}
+
+export default Login;
