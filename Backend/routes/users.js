@@ -84,7 +84,7 @@ router.post('/login', async (req, res, next) => {
   const { email, password } = req.body;
   if (!(email && password)) {
     console.error('login, email/password missing');
-    return res.status(400).json({message: "invalid credentials"});
+    return res.status(400).json({ message: "invalid credentials" });
   }
 
   try {
@@ -100,12 +100,32 @@ router.post('/login', async (req, res, next) => {
       return res.json(user);
     } else {
       console.error('login, no user found: bad credentials');
-      return res.status(400).json({message: "bad credentials"});
+      return res.status(400).json({ message: "bad credentials" });
     }
   } catch (e) {
     console.error('error in login', e);
-    res.status(500).json({message: e.message || e});
+    res.status(500).json({ message: e.message || e });
   }
 });
 
+//profile
+router.get('/profile', async (req, res, next) => {
+
+  if (!(req.cookies.authCookie)) {
+    console.error("Unauthorised access");
+    return res.status(401).json({ message: "please login to continue" });
+  }
+
+  try {
+    const user = jwt.verify(req.cookies.authCookie, jwtsecret);
+    const person = { email: user.email }
+    const { results } = await getPersons(person);
+    let result = JSON.parse(JSON.stringify(results))[0];
+    delete result.password;
+    res.json(result);
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+
+});
 module.exports = router;
