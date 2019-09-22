@@ -14,15 +14,13 @@ class NavBar extends Component {
     }
 
     handleLogout = () => {
-        cookie.remove('cookie', { path: '/' })
+        cookie.remove('authCookie', { path: '/' })
     }
 
     render() {
-
         //Cookie check to render Nav Bar
         let navBar = null;
-        if (cookie.load('cookie')) {
-
+        if (cookie.load('authCookie')) {
             navBar = (
                 <ul className="menu">
                     <li className="menu-item"><Link to="/Home">Home</Link></li>
@@ -43,7 +41,7 @@ class NavBar extends Component {
             );
         }
         let redirectVar = null;
-        if (cookie.load('cookie')) {
+        if (cookie.load('authCookie')) {
             redirectVar = <Redirect to="/home" />
         }
         return (

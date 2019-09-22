@@ -98,7 +98,7 @@ router.post('/login', async (req, res, next) => {
         email: user.email,
         isSeller: user.isSeller === 1
       }, jwtsecret, { expiresIn: "7d" });
-      res.cookie('authCookie', authCookie, { maxAge: 900000, httpOnly: true, path: '/' });
+      res.cookie('authCookie', authCookie, { maxAge: 900000, httpOnly: false, path: '/' });
       return res.json(user);
     } else {
       console.error('login, no user found: bad credentials');

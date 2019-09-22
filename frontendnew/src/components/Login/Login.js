@@ -22,11 +22,11 @@ class Login extends Component {
     submitLogin = (e) => {
         e.preventDefault();
         const data = {
-            username: this.state.username,
+            email: this.state.username,
             password: this.state.password
         }
         console.log("within submit login");
-        fetch('/login', {
+        fetch('/api/v1/users/login', {
             method: 'post',
             mode: "cors",
             redirect: 'follow',
