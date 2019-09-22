@@ -5,10 +5,14 @@ class DetailsPage extends Component {
         return (
             <div className="fullwidth-block restaurant-section category-block">
                 <div className="container" />
-                <figure><img src="dummy/restaurant.png" alt="restaurant" /></figure>
-                <div className="category-content">
-                    <h1 className="category-title">Duis aute reprehenderit</h1>
-                    <p>Perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem.</p>
+                <div className="col-md-4">
+                    <img className='pizzalogo' src="/fries.jpg" alt="pizzalogo"></img>
+                </div>
+                <div className="col-md-8">
+                    <div className="category-content">
+                        <h1 className="category-title">Popular Cusines</h1>
+                        <h3>GrubHub offers popular cusines nearby from local restaurants</h3>
+                    </div>
                 </div>
             </div>
         )

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import SearchPage from './SearchPage';
 import DetailsPage from './DetailsPage';
-import PastOrderPage from './PastOrderPage';
 
 class MainContent extends Component {
     render() {
@@ -9,7 +8,6 @@ class MainContent extends Component {
             <main className="main-content">
                 <SearchPage />
                 <DetailsPage />
-                <PastOrderPage />
             </main>
         )
     }
