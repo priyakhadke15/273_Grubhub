@@ -6,7 +6,7 @@ const crypto = require('crypto');
 
 const { jwtsecret, encrAlgorithm, encrSecret } = require('../config');
 const { getPersons, savePerson, editPerson } = require('../DAL')
-const { getRestaurants, saveRestaurant } = require('../DAL')
+const { getRestaurants, saveRestaurant, editRestaurant } = require('../DAL')
 
 // crypto (can be updated to use 'bcrypt' instead)
 const _encrypt = password => {
@@ -162,4 +162,28 @@ router.put('/profile', async (req, res, next) => {
     res.status(500).json({ message: e.message });
   }
 });
+// edit the owner's restaurant
+router.put('/restaurant', async function (req, res, next) {
+  const { name, image, address, cuisine, zipcode } = req.body;
+
+  if (!(req.cookies.authCookie)) {
+    console.error("Unauthorised access");
+    return res.status(401).json({ message: "please login to continue" });
+  }
+  try {
+    //get user id from authCookie
+    const user = jwt.verify(req.cookies.authCookie, jwtsecret);
+    //Object for restaurant to edit
+    restaurant = {
+      ownerId: user.id,
+      name, image, address, cuisine, zipcode
+    }
+    await editRestaurant(restaurant);
+    res.json({ message: "Details updated" });
+  }
+  catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+});
+
 module.exports = router;
