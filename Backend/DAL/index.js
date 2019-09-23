@@ -3,7 +3,7 @@ const mysql = require('mysql');
 const { sql_host, sql_port, sql_user, sql_password, sql_database } = require('../config');
 
 const { createTables } = require('./init');
-const { getPersons, savePerson } = require('./persons');
+const { getPersons, savePerson, editPerson } = require('./persons');
 const { getItems, saveItem } = require('./items');
 const { getRestaurants, saveRestaurant } = require('./restaurants');
 
@@ -40,6 +40,12 @@ const _savePerson = async person => {
     return savePerson(conn)(person);
 };
 
+const _editPerson = async person => {
+    const conn = await getConnection();
+    return editPerson(conn)(person);
+};
+
+
 const _getItems = async id => {
     const conn = await getConnection();
     return getItems(conn)(id);
@@ -64,6 +70,7 @@ module.exports = {
     createTables: _createTables,
     getPersons: _getPersons,
     savePerson: _savePerson,
+    editPerson: _editPerson,
     getItems: _getItems,
     saveItem: _saveItem,
     getRestaurants: _getRestaurants,

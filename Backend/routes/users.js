@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require('crypto');
 
 const { jwtsecret, encrAlgorithm, encrSecret } = require('../config');
-const { getPersons, savePerson } = require('../DAL')
+const { getPersons, savePerson, editPerson } = require('../DAL')
 const { getRestaurants, saveRestaurant } = require('../DAL')
 
 // crypto (can be updated to use 'bcrypt' instead)
@@ -140,6 +140,26 @@ router.get('/profile', async (req, res, next) => {
   } catch (e) {
     res.status(500).json({ message: e.message });
   }
+});
 
+router.put('/profile', async (req, res, next) => {
+  let person;
+  const { email, password, firstName, lastName, profileImage } = req.body;
+  if (!(req.cookies.authCookie)) {
+    console.error("Unauthorised access");
+    return res.status(401).json({ message: "please login to continue" });
+  }
+  try {
+    const user = jwt.verify(req.cookies.authCookie, jwtsecret);
+    person = {
+      id: user.id,
+      email, password, firstName, lastName, profileImage
+    }
+    await editPerson(person);
+    res.json({ message: "Details updated" });
+  }
+  catch (e) {
+    res.status(500).json({ message: e.message });
+  }
 });
 module.exports = router;

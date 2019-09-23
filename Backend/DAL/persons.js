@@ -46,7 +46,45 @@ const savePerson = connection => person => {
     });
 };
 
+const editPerson = connection => person => {
+    const { id, email, password, firstName, lastName, profileImage } = person;
+    let query = `UPDATE ${_tableName}`;
+    const clause = [];
+
+    if (email) {
+        clause.push(`email='${email}'`);
+    }
+    if (password) {
+        clause.push(`password='${password}'`);
+    }
+    if (firstName) {
+        clause.push(`firstName='${firstName}'`);
+    }
+    if (lastName) {
+        clause.push(`lastName='${lastName}'`);
+    }
+    if (profileImage) {
+        clause.push(`lastName='${profileImage}'`);
+    }
+    query += ` SET ${clause.join(' , ')}`;
+    query += `where id='${id}'`;
+    console.log(query);
+    return new Promise((resolve, reject) => {
+        connection.query(query, (error, results, fields) => {
+            // release connection first!
+            connection.release();
+
+            if (error) {
+                reject(error);
+            } else {
+                resolve({ results, fields });
+            }
+        });
+    });
+};
+
 module.exports = {
     getPersons,
-    savePerson
+    savePerson,
+    editPerson
 };
