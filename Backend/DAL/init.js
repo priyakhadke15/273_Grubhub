@@ -10,6 +10,7 @@ const query = `CREATE TABLE Persons (
 CREATE TABLE Restaurants (
     restaurantId varchar(255) PRIMARY KEY NOT NULL,
     ownerId varchar(255) references Persons(id),
+    name VARCHAR(255),
     image varchar(255),
     address varchar(255),
     cuisine varchar(255),

@@ -6,7 +6,7 @@ const crypto = require('crypto');
 
 const { jwtsecret, encrAlgorithm, encrSecret } = require('../config');
 const { getPersons, savePerson } = require('../DAL')
-const { saveRestaurant } = require('../DAL')
+const { getRestaurants, saveRestaurant } = require('../DAL')
 
 // crypto (can be updated to use 'bcrypt' instead)
 const _encrypt = password => {
@@ -42,14 +42,14 @@ router.post('/', async (req, res, next) => {
   // make sure mandatory keys are present
   if (!(email && password && firstName && lastName)) {
     console.error('save users, mandatory buyer info missing');
-    return res.status(400).json({message: "mandatory buyer info missing"});
+    return res.status(400).json({ message: "mandatory buyer info missing" });
   }
   //check mandatory seller keys are present
   let restaurant = null;
   if (isSeller) {
     if (!(restName && restZipCode)) {
       console.error('save users, mandatory seller info missing');
-      return res.status(400).json({message: 'mandatory seller info missing '});
+      return res.status(400).json({ message: 'mandatory seller info missing ' });
     }
     else {
       restaurant = {
@@ -75,7 +75,7 @@ router.post('/', async (req, res, next) => {
     res.json(results);
   } catch (e) {
     console.error('error creating a new user or restaurant', e);
-    res.status(500).json({message: e.message || e});
+    res.status(500).json({ message: e.message || e });
   }
 });
 
@@ -110,6 +110,7 @@ router.post('/login', async (req, res, next) => {
 
 //profile
 router.get('/profile', async (req, res, next) => {
+  let restaurant, queryResult, Restresult, finalresult;
 
   if (!(req.cookies.authCookie)) {
     console.error("Unauthorised access");
@@ -118,11 +119,24 @@ router.get('/profile', async (req, res, next) => {
 
   try {
     const user = jwt.verify(req.cookies.authCookie, jwtsecret);
-    const person = { email: user.email }
+    if (user.isSeller) {
+      restaurant = { ownerId: user.id };
+      ({ results: queryResult } = await getRestaurants(restaurant));
+      Restresult = JSON.parse(JSON.stringify(queryResult))[0];
+    }
+
+    const person = { email: user.email };
     const { results } = await getPersons(person);
-    let result = JSON.parse(JSON.stringify(results))[0];
-    delete result.password;
-    res.json(result);
+    let Personresult = JSON.parse(JSON.stringify(results))[0];
+
+    delete Personresult.password;
+    if (Restresult) {
+      finalresult = { ...Personresult, ...Restresult };
+    }
+    else {
+      finalresult = { ...Personresult };
+    }
+    res.json(finalresult);
   } catch (e) {
     res.status(500).json({ message: e.message });
   }
