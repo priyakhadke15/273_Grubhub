@@ -5,7 +5,7 @@ import NavBar from './LandingPage/NavBar'
 import Home from './LandingPage/Home';
 import Signup from './Signup/Signup';
 import Login from './Login/Login';
-import Account from './Account';
+import Account from './Account/Account';
 import SearchPage from './SearchPage';
 import { Route } from 'react-router-dom';
 import LoadingOverlay from 'react-loading-overlay';
@@ -43,9 +43,12 @@ class Main extends Component {
                             path="/login"
                             render={props => <Login {...props} toggleSpinner={this.toggleSpinner.bind(this)} />}
                         />
+                        <Route
+                            path="/account"
+                            render={props => <Account {...props} toggleSpinner={this.toggleSpinner.bind(this)} />}
+                        />
                         <Route path="/Home" component={Home} />
                         <Route path="/SearchPage" component={SearchPage} />
-                        <Route path="/Account" component={Account} />
                     </div>
                     <SiteFooter />
                     <script src="js/jquery-1.11.1.min.js"></script>

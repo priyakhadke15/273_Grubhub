@@ -25,7 +25,7 @@ class NavBar extends Component {
                 <ul className="menu">
                     <li className="menu-item"><Link to="/Home">Home</Link></li>
                     <li className="menu-item"><Link to="/SearchPage">Catering</Link></li>
-                    <li className="menu-item"><Link to="/Account">Account</Link></li>
+                    <li className="menu-item"><Link to="/account/myaccount">Account</Link></li>
                     <li className="menu-item"><Link to="/" onClick={this.handleLogout}>Logout</Link></li>
                 </ul>
             );
