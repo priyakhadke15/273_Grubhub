@@ -65,9 +65,17 @@ class Login extends Component {
         })
     }
 
+    componentDidMount() {
+        setTimeout(() => this.props.login(), 2000);
+    }
+
     render() {
         return (
             <div>
+                isLoggedIn: {this.props.isLoggedIn}<br />
+                isSeller: {this.props.isSeller ? 'true' : 'false'}<br />
+                email: {this.props.email}<br />
+                userID: {this.props.userId}
                 {this.state.authFlag ? <Redirect to="/Home" /> : null}
                 < div className="contact-form"  >
                     <form onSubmit={this.submitLogin}>
@@ -83,7 +91,12 @@ class Login extends Component {
     }
 }
 
-const mapStateToProps = state => ({ isLoggedIn: state.isLoggedIn });
+const mapStateToProps = state => ({
+    isLoggedIn: state.userdata.isLoggedIn,
+    isSeller: state.userdata.isSeller,
+    userId: state.userdata.id,
+    email: state.userdata.email
+});
 
 const mapDispatchToProps = dispatch => ({
     login: () => dispatch(login()),

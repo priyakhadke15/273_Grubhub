@@ -2,15 +2,13 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
+import { connect } from 'react-redux';
+import { login, logout } from '../../actions';
 
 class NavBar extends Component {
     constructor(props) {
         super(props);
         this.handleLogout = this.handleLogout.bind(this);
-
-        this.state = {
-            isLoggedIn: "false",
-        }
     }
 
     handleLogout = () => {
@@ -22,12 +20,15 @@ class NavBar extends Component {
         let navBar = null;
         if (cookie.load('authCookie')) {
             navBar = (
-                <ul className="menu">
-                    <li className="menu-item"><Link to="/Home">Home</Link></li>
-                    <li className="menu-item"><Link to="/SearchPage">Catering</Link></li>
-                    <li className="menu-item"><Link to="/account/myaccount">Account</Link></li>
-                    <li className="menu-item"><Link to="/" onClick={this.handleLogout}>Logout</Link></li>
-                </ul>
+                <div>
+                    islogged: {this.props.isLoggedIn}
+                    <ul className="menu">
+                        <li className="menu-item"><Link to="/Home">Home</Link></li>
+                        <li className="menu-item"><Link to="/SearchPage">Catering</Link></li>
+                        <li className="menu-item"><Link to="/account/myaccount">Account</Link></li>
+                        <li className="menu-item"><Link to="/login" onClick={this.handleLogout}>Logout</Link></li>
+                    </ul>
+                </div>
             );
         } else {
             //Else display login button
@@ -56,4 +57,16 @@ class NavBar extends Component {
 
         );
     }
-} export default NavBar;
+}
+
+const mapStateToProps = state => ({
+    isLoggedIn: state.userdata.isLoggedIn,
+    isSeller: state.userdata.isSeller
+});
+
+const mapDispatchToProps = dispatch => ({
+    login: () => dispatch(login()),
+    logout: () => dispatch(logout())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
