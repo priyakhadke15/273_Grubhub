@@ -20,11 +20,11 @@ const getRestaurants = connection => (restaurant = {}) => {
         clause.push(`zipcode='${zipcode}'`);
     }
     query += clause.length > 0 ? ` where ${clause.join(' and ')}` : ''
+    console.log(query);
     return new Promise((resolve, reject) => {
         connection.query(query, (error, results, fields) => {
             // release connection first!
             connection.release();
-
             if (error) {
                 reject(error);
             } else {

@@ -1,12 +1,16 @@
 const _tableName = 'Items';
 
 const getItems = connection => item => {
-    const { itemName, iDesc, price, secName } = item;
+    const { restaurantId, itemName, iDesc, price, secName } = item;
     let query = `select * from ${_tableName}`;
     const clause = [];
     if (itemName) {
         clause.push(`itemName LIKE '%${itemName}%'`);
     }
+    if (restaurantId) {
+        clause.push(`restaurantId='${restaurantId}'`);
+    }
+
     if (iDesc) {
         clause.push(`iDesc like '%${iDesc}%'`);
     }
@@ -17,7 +21,6 @@ const getItems = connection => item => {
         clause.push(`secName like '%${secName}%'`);
     }
     query += clause.length > 0 ? ` where ${clause.join(' and ')}` : ''
-    console.log(query);
     return new Promise((resolve, reject) => {
         connection.query(query, (error, results, fields) => {
             // release connection first!
@@ -81,8 +84,24 @@ const editItem = connection => item => {
         });
     });
 };
+const delItem = connection => item => {
+    const { itemID } = item;
+    let query = `DELETE FROM ${_tableName}` + ` where itemID='${itemID}'`;
+    return new Promise((resolve, reject) => {
+        connection.query(query, (error, results, fields) => {
+            // release connection first!
+            connection.release();
+            if (error) {
+                reject(error);
+            } else {
+                resolve({ results, fields });
+            }
+        });
+    });
+};
 module.exports = {
     getItems,
     saveItem,
-    editItem
+    editItem,
+    delItem
 };
