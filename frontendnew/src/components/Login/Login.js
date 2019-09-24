@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import './Login.css';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
+import { login, logout } from '../../actions';
 
-// import cookie from 'react-cookies';
-
-class ConnectedLogin extends Component {
+class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -83,13 +82,12 @@ class ConnectedLogin extends Component {
         );
     }
 }
-function mapState(state) {
-    const { loggingIn } = state.authentication;
-    return { loggingIn };
-}
-const actionCreators = {
-    login: userActions.login,
-    logout: userActions.logout
-};
-const Login = connect(mapState, actionCreators)(ConnectedLogin);
-export default Login;
+
+const mapStateToProps = state => ({ isLoggedIn: state.isLoggedIn });
+
+const mapDispatchToProps = dispatch => ({
+    login: () => dispatch(login()),
+    logout: () => dispatch(logout())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
