@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import './Login.css';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
+import { connect } from "react-redux";
+
 // import cookie from 'react-cookies';
 
-class Login extends Component {
+class ConnectedLogin extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -81,5 +83,13 @@ class Login extends Component {
         );
     }
 }
-
+function mapState(state) {
+    const { loggingIn } = state.authentication;
+    return { loggingIn };
+}
+const actionCreators = {
+    login: userActions.login,
+    logout: userActions.logout
+};
+const Login = connect(mapState, actionCreators)(ConnectedLogin);
 export default Login;
