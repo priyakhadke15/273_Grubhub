@@ -1,7 +1,7 @@
 const _tableName = 'Restaurants';
 
 const getRestaurants = connection => (restaurant = {}) => {
-    const { restaurantId, ownerId } = restaurant;
+    const { restaurantId, ownerId, address, cuisine, zipcode } = restaurant;
     let query = `select * from ${_tableName}`;
     const clause = [];
     if (restaurantId) {
@@ -9,6 +9,15 @@ const getRestaurants = connection => (restaurant = {}) => {
     }
     if (ownerId) {
         clause.push(`ownerId='${ownerId}'`);
+    }
+    if (cuisine) {
+        clause.push(`cuisine='${cuisine}'`);
+    }
+    if (address) {
+        clause.push(`address LIKE '%${address}%'`);
+    }
+    if (zipcode) {
+        clause.push(`zipcode='${zipcode}'`);
     }
     query += clause.length > 0 ? ` where ${clause.join(' and ')}` : ''
     return new Promise((resolve, reject) => {
@@ -33,7 +42,6 @@ const saveRestaurant = connection => restaurant => {
         connection.query(query, (error, results, fields) => {
             // release connection first!
             connection.release();
-
             if (error) {
                 reject(error);
             } else {

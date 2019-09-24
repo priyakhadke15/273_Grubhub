@@ -4,7 +4,7 @@ const { sql_host, sql_port, sql_user, sql_password, sql_database } = require('..
 
 const { createTables } = require('./init');
 const { getPersons, savePerson, editPerson } = require('./persons');
-const { getItems, saveItem } = require('./items');
+const { getItems, saveItem, editItem } = require('./items');
 const { getRestaurants, saveRestaurant, editRestaurant } = require('./restaurants');
 
 const pool = mysql.createPool({
@@ -56,6 +56,11 @@ const _saveItem = async item => {
     return saveItem(conn)(item);
 };
 
+const _editItem = async item => {
+    const conn = await getConnection();
+    return editItem(conn)(item);
+};
+
 const _getRestaurants = async id => {
     const conn = await getConnection();
     return getRestaurants(conn)(id);
@@ -77,7 +82,9 @@ module.exports = {
     editPerson: _editPerson,
     getItems: _getItems,
     saveItem: _saveItem,
+    editItem: _editItem,
     getRestaurants: _getRestaurants,
     saveRestaurant: _saveRestaurant,
     editRestaurant: _editRestaurant
+
 };
