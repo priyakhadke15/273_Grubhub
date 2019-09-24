@@ -31,7 +31,7 @@ class Main extends Component {
                 active={this.state.showSpinner}
                 spinner
                 text={this.state.spinnerText}
-                >
+            >
                 <div className="homepage">
                     <div id="site-content">
                         <Route path="/" component={NavBar} />
@@ -47,7 +47,7 @@ class Main extends Component {
                             path="/account"
                             render={props => <Account {...props} toggleSpinner={this.toggleSpinner.bind(this)} />}
                         />
-                        <Route path="/Home" component={Home} />
+                        <Route path="/" component={Home} />
                         <Route path="/SearchPage" component={SearchPage} />
                     </div>
                     <SiteFooter />
