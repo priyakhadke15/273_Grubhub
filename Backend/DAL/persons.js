@@ -64,7 +64,7 @@ const editPerson = connection => person => {
         clause.push(`lastName='${lastName}'`);
     }
     if (profileImage) {
-        clause.push(`lastName='${profileImage}'`);
+        clause.push(`profileImage='${profileImage}'`);
     }
     query += ` SET ${clause.join(' , ')}`;
     query += `where id='${id}'`;

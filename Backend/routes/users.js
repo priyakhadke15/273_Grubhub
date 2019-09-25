@@ -3,6 +3,9 @@ var router = express.Router();
 const uuidv4 = require('uuid/v4');
 const jwt = require("jsonwebtoken");
 const crypto = require('crypto');
+const path = require('path');
+const multer = require('multer');
+const upload = multer({ dest: path.join(__dirname, '..', 'uploads/') });
 
 const { jwtsecret, encrAlgorithm, encrSecret } = require('../config');
 const { getPersons, savePerson, editPerson } = require('../DAL')
@@ -143,9 +146,10 @@ router.get('/profile', async (req, res, next) => {
   }
 });
 
-router.put('/profile', async (req, res, next) => {
+router.put('/profile', upload.single('profileImage'), async (req, res, next) => {
   let person;
-  const { email, password, firstName, lastName, profileImage } = req.body;
+  const { email, password, firstName, lastName } = req.body;
+  const profileImage = req.file ? `/${req.file.filename}` : '';
   if (!(req.cookies.authCookie)) {
     console.error("Unauthorised access");
     return res.status(401).json({ message: "please login to continue" });
