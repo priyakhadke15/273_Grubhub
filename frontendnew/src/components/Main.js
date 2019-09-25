@@ -6,6 +6,7 @@ import Home from './LandingPage/Home';
 import Signup from './Signup/Signup';
 import Login from './Login/Login';
 import Account from './Account/Account';
+import Restaurant from './Account/Restaurant';
 import SearchPage from './SearchPage';
 import { Route } from 'react-router-dom';
 import LoadingOverlay from 'react-loading-overlay';
@@ -46,6 +47,10 @@ class Main extends Component {
                         <Route
                             path="/account"
                             render={props => <Account {...props} toggleSpinner={this.toggleSpinner.bind(this)} />}
+                        />
+                        <Route
+                            path="/account/restaurant"
+                            render={props => <Restaurant {...props} toggleSpinner={this.toggleSpinner.bind(this)} />}
                         />
                         <Route path="/home" component={Home} />
                         <Route path="/SearchPage" component={SearchPage} />
