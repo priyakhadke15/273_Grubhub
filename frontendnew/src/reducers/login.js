@@ -16,7 +16,22 @@ const getUserdetails = () => {
     }
 };
 
+// const _logout = () => cookie.remove('authCookie', { path: '/' });
+
+// export default (state, action) => {
+//     console.log('login reducer', state, action)
+//     if (action.type === 'LOGIN') {
+//         return {
+//             isLoggedIn: action.type === 'LOGIN',
+//             ..._getUserdetails()
+//         }
+//     } else {
+//         _logout();
+//         return { isLoggedIn: false }
+//     }
+// };
+
 export default (state, action) => ({
-    isLoggedIn: action.type === 'LOGIN' ? 'true' : 'false',
+    isLoggedIn: action.type === 'LOGIN',
     ...getUserdetails()
 });
