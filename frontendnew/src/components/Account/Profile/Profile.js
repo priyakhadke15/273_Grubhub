@@ -24,7 +24,10 @@ class Profile extends Component {
             await sleep(1000);
             this.props.toggleSpinner();
             if (response.status === 200) {
-                this.setState({ email, firstname, lastname, profileImage });
+                this.setState({
+                    profileImage: !profileImage || profileImage === 'undefined' ? '/pic.png' : profileImage,
+                    email, firstname, lastname
+                });
             } else if (response.status === 401) {
                 this.setState({ msg: 'please login to continue...' });
             }
