@@ -8,7 +8,9 @@ li {
 }
 
 .leftdiv {
-  width: 30%;
+  width: 20%;
+  position: relative;
+  z-index: 1;
   background: #f0f0f0;
 }
 
