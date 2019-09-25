@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import './Login.css';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
-// import cookie from 'react-cookies';
+import { connect } from 'react-redux';
+import { login, logout } from '../../actions';
 
 class Login extends Component {
     constructor(props) {
@@ -10,7 +11,6 @@ class Login extends Component {
         this.state = {
             username: "",
             password: "",
-            authFlag: false,
             msg: ''
         }
 
@@ -41,10 +41,12 @@ class Login extends Component {
         }).then(async response => {
             await sleep(2000);
             this.props.toggleSpinner();
-            this.setState({
-                authFlag: response.status === 200,
-                msg: response.body.message
-            });
+            if (response.status === 200) {
+                await sleep(500);
+                this.props.login();
+            } else {
+                this.setState({ msg: response.body.message });
+            }
         }).catch(async err => {
             await sleep(2000);
             this.props.toggleSpinner();
@@ -64,10 +66,14 @@ class Login extends Component {
         })
     }
 
+    componentDidMount() {
+        setTimeout(() => this.props.login(), 2000);
+    }
+
     render() {
         return (
             <div>
-                {this.state.authFlag ? <Redirect to="/Home" /> : null}
+                {this.props.isLoggedIn ? <Redirect to="/Home" /> : null}
                 < div className="contact-form"  >
                     <form onSubmit={this.submitLogin}>
                         <input type="email" placeholder="Email" onChange={this.usernameChangeHandler} name="username" required autoFocus />
@@ -82,4 +88,16 @@ class Login extends Component {
     }
 }
 
-export default Login;
+const mapStateToProps = state => ({
+    isLoggedIn: state.userdata.isLoggedIn,
+    // isSeller: state.userdata.isSeller,
+    // userId: state.userdata.id,
+    // email: state.userdata.email
+});
+
+const mapDispatchToProps = dispatch => ({
+    login: () => dispatch(login()),
+    logout: () => dispatch(logout())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
