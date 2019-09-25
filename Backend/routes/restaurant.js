@@ -4,7 +4,8 @@ const jwt = require("jsonwebtoken");
 const { jwtsecret } = require('../config');
 
 const { getRestaurants, saveRestaurant, editRestaurant } = require('../DAL')
-const { getItems } = require('../DAL')
+const { getItems } = require('../DAL');
+const { getOrders } = require('../DAL');
 
 // edit the owner's restaurant
 router.put('/', async function (req, res, next) {
@@ -61,6 +62,40 @@ router.get('/item', async function (req, res, next) {
         res.status(500).json({ message: e.message });
     }
 });
+//get all orders for this restaurant
+router.get('/order', async function (req, res, next) {
+    if (!(req.cookies.authCookie)) {
+        console.error("Unauthorised access");
+        return res.status(401).json({ message: "please login to continue" });
+    }
+    try {
+        const user = jwt.verify(req.cookies.authCookie, jwtsecret);
+        if (!user.isSeller) {
+            console.error("Unauthorised access");
+            return res.status(401).json({ message: "please login to continue" });
+        }
+        //restaurant object to get the rest ID
+        restaurant = {
+            ownerId: user.id
+        }
+        const { results } = await getRestaurants(restaurant);
+        if (results.length == 1) {
+            rest = results[0];
+        }
+        //Object for item to search
+        order = {
+            restaurantId: rest.restaurantId
+        }
+        const { results: queryresult } = await getOrders(order);
+        res.json(queryresult);
+    }
+    catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+
+
+});
+
 module.exports = router;
 
 
