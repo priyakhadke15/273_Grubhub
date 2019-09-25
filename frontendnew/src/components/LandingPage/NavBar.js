@@ -13,7 +13,6 @@ class NavBar extends Component {
 
     handleLogout = () => {
         this.props.logout();
-        cookie.remove('authCookie', { path: '/' })
     }
 
     render() {

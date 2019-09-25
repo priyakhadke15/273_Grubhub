@@ -1,6 +1,6 @@
 import cookie from 'react-cookies';
 
-const getUserdetails = () => {
+const _getUserdetails = () => {
     const authCookie = cookie.load('authCookie');
     if (authCookie) {
         // 1. load cookie (it will be a standard jwt string)
@@ -16,22 +16,16 @@ const getUserdetails = () => {
     }
 };
 
-// const _logout = () => cookie.remove('authCookie', { path: '/' });
+const _logout = () => cookie.remove('authCookie', { path: '/' });
 
-// export default (state, action) => {
-//     console.log('login reducer', state, action)
-//     if (action.type === 'LOGIN') {
-//         return {
-//             isLoggedIn: action.type === 'LOGIN',
-//             ..._getUserdetails()
-//         }
-//     } else {
-//         _logout();
-//         return { isLoggedIn: false }
-//     }
-// };
-
-export default (state, action) => ({
-    isLoggedIn: action.type === 'LOGIN',
-    ...getUserdetails()
-});
+export default (state, action) => {
+    if (action.type === 'LOGIN') {
+        return {
+            isLoggedIn: action.type === 'LOGIN',
+            ..._getUserdetails()
+        }
+    } else {
+        _logout();
+        return { isLoggedIn: false }
+    }
+};

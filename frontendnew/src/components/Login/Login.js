@@ -66,10 +66,6 @@ class Login extends Component {
         })
     }
 
-    componentDidMount() {
-        setTimeout(() => this.props.login(), 2000);
-    }
-
     render() {
         return (
             <div>
