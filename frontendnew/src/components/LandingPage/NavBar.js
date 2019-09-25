@@ -23,7 +23,7 @@ class NavBar extends Component {
                         <div>
                             <ul className="menu">
                                 <li className="menu-item"><Link to="/Home">Home</Link></li>
-                                {this.props.isLoggedIn && <li className="menu-item"><Link to="/searchpage">Catering</Link></li>}
+                                {this.props.isLoggedIn && !this.props.isSeller && <li className="menu-item"><Link to="/searchpage">Catering</Link></li>}
                                 {this.props.isLoggedIn && <li className="menu-item"><Link to="/account/myaccount">Account</Link></li>}
                                 {this.props.isLoggedIn && <li className="menu-item"><Link to="/login" onClick={this.handleLogout}>Logout</Link></li>}
                                 {/* {this.props.isLoggedIn && <li className="menu-item"><a href="#" onClick={this.handleLogout}>Logout </a></li>} */}

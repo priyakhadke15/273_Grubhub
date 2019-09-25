@@ -19,12 +19,20 @@ const _getUserdetails = () => {
 const _logout = () => cookie.remove('authCookie', { path: '/' });
 
 export default (state, action) => {
+    console.log('login reducer', state, action)
     if (action.type === 'LOGIN') {
         return {
             isLoggedIn: action.type === 'LOGIN',
             ..._getUserdetails()
         }
-    } else {
+    } else if (action.type === 'SIGNUP') {
+        console.log("within signup reducer");
+        return {
+            ...state,
+            signupEmail: action.payload.email
+        }
+    }
+    else {
         _logout();
         return { isLoggedIn: false }
     }

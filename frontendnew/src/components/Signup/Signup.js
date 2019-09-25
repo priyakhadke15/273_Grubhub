@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './Signup.css';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { signup } from '../../actions';
 
 class Signup extends Component {
     constructor(props) {
@@ -18,12 +20,12 @@ class Signup extends Component {
         this.restaurantzipcodeRef = React.createRef();
     }
 
-    toggleIsSeller = () => this.setState({isSeller: !this.state.isSeller});
+    toggleIsSeller = () => this.setState({ isSeller: !this.state.isSeller });
 
     onSubmit = async e => {
         e.preventDefault();
-        if(this.passwordRef.current.value !== this.retypepasswordRef.current.value) {
-            this.setState({message: 'passwords do not match'});
+        if (this.passwordRef.current.value !== this.retypepasswordRef.current.value) {
+            this.setState({ message: 'passwords do not match' });
             return;
         }
         const person = {
@@ -51,8 +53,12 @@ class Signup extends Component {
             console.log(body);
             await sleep(2000);
             this.props.toggleSpinner();
+            if (response.status === 200) {
+                console.log('calling redux signup');
+                this.props.signup(person.email);
+            }
             this.setState({ message: response.status === 200 ? 'account created successfully! please login to continue...' : body.message });
-        } catch(e) {
+        } catch (e) {
             await sleep(2000);
             this.props.toggleSpinner();
             this.setState({ message: e.message || e });
@@ -62,29 +68,29 @@ class Signup extends Component {
     render() {
         return (
             <form action="#" onSubmit={this.onSubmit.bind(this)}>
-                <div className="contact-form" style={{width:"80%"}} >
-                    <div style={{display:"flex"}}>
+                <div className="contact-form" style={{ width: "80%" }} >
+                    <div style={{ display: "flex" }}>
                         <div className="left">
                             <div className="namediv">
-                                <input ref={this.firstnameRef} name="firstname" className="inputfirstname" type="text" placeholder="First Name" autoFocus required/>
-                                <input ref={this.lastnameRef} className="inputlastname" type="text" placeholder="Last Name" required/>
+                                <input ref={this.firstnameRef} name="firstname" className="inputfirstname" type="text" placeholder="First Name" autoFocus required />
+                                <input ref={this.lastnameRef} className="inputlastname" type="text" placeholder="Last Name" required />
                             </div>
                             <input ref={this.emailRef} type="email" placeholder="Email" required />
-                            <input ref={this.passwordRef} type="password" placeholder="Password (Min 8 char)" required/>
-                            <input ref={this.retypepasswordRef} type="password" placeholder="Confirm password" required/>
+                            <input ref={this.passwordRef} type="password" placeholder="Password (Min 8 char)" required />
+                            <input ref={this.retypepasswordRef} type="password" placeholder="Confirm password" required />
                         </div>
                         <div className="right">
                             <div className="ui toggle checkbox" >
                                 <input onClick={this.toggleIsSeller.bind(this)} readOnly={true} checked={this.state.isSeller} type="checkbox" />
                                 <label>Business owner?</label>
                             </div>
-                            <div style={{display:this.state.isSeller ? "block" : "none"}}>
+                            <div style={{ display: this.state.isSeller ? "block" : "none" }}>
                                 <input ref={this.restaurantnameRef} required={this.state.isSeller} type="text" placeholder="Restaurant Name" />
                                 <input ref={this.restaurantzipcodeRef} required={this.state.isSeller} type="text" placeholder="Restaurant Zip Code" />
                             </div>
                         </div>
                     </div>
-                    <div className="bottondiv" style={{width:"50%",margin:"0 auto"}}>
+                    <div className="bottondiv" style={{ width: "50%", margin: "0 auto" }}>
                         <Link to="/login">Already have an account? login here</Link>
                         <input type="submit" value="Create Account" />
                         <pre>{this.state.message}</pre>
@@ -95,5 +101,15 @@ class Signup extends Component {
     }
 
 }
+const mapStateToProps = () => ({
+    // isLoggedIn: state.userdata.isLoggedIn,
+    // isSeller: state.userdata.isSeller,
+    //userId: person.email
+    // email: state.userdata.email
+});
+const mapDispatchToProps = dispatch => ({
+    signup: email => dispatch(signup(email)),
+}
+);
 
-export default Signup;
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

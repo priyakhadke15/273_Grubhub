@@ -8,8 +8,9 @@ import { login, logout } from '../../actions';
 class Login extends Component {
     constructor(props) {
         super(props);
+        console.log('login props', props.singupEmail)
         this.state = {
-            username: "",
+            username: props.signupEmail || "",
             password: "",
             msg: ''
         }
@@ -86,6 +87,7 @@ class Login extends Component {
 
 const mapStateToProps = state => ({
     isLoggedIn: state.userdata.isLoggedIn,
+    singupEmail: state.userdata.signupEmail
     // isSeller: state.userdata.isSeller,
     // userId: state.userdata.id,
     // email: state.userdata.email
