@@ -48,10 +48,6 @@ class Main extends Component {
                             path="/account"
                             render={props => <Account {...props} toggleSpinner={this.toggleSpinner.bind(this)} />}
                         />
-                        <Route
-                            path="/account/restaurant"
-                            render={props => <Restaurant {...props} toggleSpinner={this.toggleSpinner.bind(this)} />}
-                        />
                         <Route path="/home" component={Home} />
                         <Route path="/SearchPage" component={SearchPage} />
                     </div>
