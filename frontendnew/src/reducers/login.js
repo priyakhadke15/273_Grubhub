@@ -28,7 +28,7 @@ export default (state, action) => {
     } else if (action.type === 'SIGNUP') {
         console.log("within signup reducer");
         return {
-            ...state,
+            ...(state.userdata),
             signupEmail: action.payload.email
         }
     }
