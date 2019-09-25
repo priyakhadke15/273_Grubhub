@@ -12,7 +12,37 @@ class Restaurant extends Component {
     }
     async submitForm(e) {
         e.preventDefault();
-        // TODO: update api call here
+        const sleep = msec => new Promise(r => setTimeout(r, msec));
+        const data = {
+            name: this.state.name,
+            address: this.state.address,
+            cuisine: this.state.cuisine,
+            zipcode: this.state.zipcode
+        };
+        this.props.toggleSpinner('Updating your info....');
+        fetch('/api/v1/restaurant', {
+            method: 'put',
+            mode: "cors",
+            redirect: 'follow',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(async (response) => {
+            const body = await response.json();
+            await sleep(2000);
+            this.props.toggleSpinner();
+            if (response.status === 200) {
+                await sleep(500);
+                this.setState({ msg: body.message })
+            } else {
+                this.setState({ msg: body.message });
+            }
+        }).catch(async err => {
+            await sleep(2000);
+            this.props.toggleSpinner();
+            this.setState({ msg: err.message || err })
+        });
     }
     async componentDidMount() {
         const sleep = msec => new Promise(r => setTimeout(r, msec));
