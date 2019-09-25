@@ -11,7 +11,6 @@ class Login extends Component {
         this.state = {
             username: "",
             password: "",
-            authFlag: false,
             msg: ''
         }
 
@@ -42,10 +41,12 @@ class Login extends Component {
         }).then(async response => {
             await sleep(2000);
             this.props.toggleSpinner();
-            this.setState({
-                authFlag: response.status === 200,
-                msg: response.body.message
-            });
+            if (response.status === 200) {
+                await sleep(500);
+                this.props.login();
+            } else {
+                this.setState({ msg: response.body.message });
+            }
         }).catch(async err => {
             await sleep(2000);
             this.props.toggleSpinner();
@@ -72,11 +73,7 @@ class Login extends Component {
     render() {
         return (
             <div>
-                isLoggedIn: {this.props.isLoggedIn}<br />
-                isSeller: {this.props.isSeller ? 'true' : 'false'}<br />
-                email: {this.props.email}<br />
-                userID: {this.props.userId}
-                {this.state.authFlag ? <Redirect to="/Home" /> : null}
+                {this.props.isLoggedIn ? <Redirect to="/Home" /> : null}
                 < div className="contact-form"  >
                     <form onSubmit={this.submitLogin}>
                         <input type="email" placeholder="Email" onChange={this.usernameChangeHandler} name="username" required autoFocus />
@@ -93,9 +90,9 @@ class Login extends Component {
 
 const mapStateToProps = state => ({
     isLoggedIn: state.userdata.isLoggedIn,
-    isSeller: state.userdata.isSeller,
-    userId: state.userdata.id,
-    email: state.userdata.email
+    // isSeller: state.userdata.isSeller,
+    // userId: state.userdata.id,
+    // email: state.userdata.email
 });
 
 const mapDispatchToProps = dispatch => ({
