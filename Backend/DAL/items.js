@@ -1,9 +1,12 @@
 const _tableName = 'Items';
 
 const getItems = connection => item => {
-    const { restaurantId, itemName, iDesc, price, secName } = item;
+    const { itemID, restaurantId, itemName, iDesc, price, secName } = item;
     let query = `select * from ${_tableName}`;
     const clause = [];
+    if (itemID) {
+        clause.push(`itemID='${itemID}'`);
+    }
     if (itemName) {
         clause.push(`itemName LIKE '%${itemName}%'`);
     }

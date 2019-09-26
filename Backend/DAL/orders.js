@@ -60,9 +60,43 @@ const getOrderDetails = connection => orderdetail => {
         });
     });
 };
-
-
+//submit buyer's order in Order table
+const saveOrder = connection => order => {
+    const { orderID, restaurantId, buyerId, orderDate, deliveryAdd, status, price } = order;
+    let query = `insert into ${_tableName} (orderID, restaurantId, buyerId, orderDate, deliveryAdd, status, price)` +
+        `VALUES ('${orderID}', '${restaurantId}', '${buyerId}', '${orderDate}', '${deliveryAdd}', '${status}', ${price});`;
+    return new Promise((resolve, reject) => {
+        connection.query(query, (error, results, fields) => {
+            // release connection first!
+            connection.release();
+            if (error) {
+                reject(error);
+            } else {
+                resolve({ results, fields });
+            }
+        });
+    });
+};
+//submit buyer's order in OrderDetails table
+const saveOrderDetails = connection => orderdetail => {
+    const { orderID, itemprice, totalprice, itemID, quantity } = orderdetail;
+    let query = `insert into OrderDetails (orderID, itemID, quantity, itemprice, totalprice)` +
+        `VALUES ('${orderID}', '${itemID}', '${quantity}', '${itemprice}', '${totalprice}');`;
+    return new Promise((resolve, reject) => {
+        connection.query(query, (error, results, fields) => {
+            // release connection first!
+            connection.release();
+            if (error) {
+                reject(error);
+            } else {
+                resolve({ results, fields });
+            }
+        });
+    });
+};
 module.exports = {
     getOrders,
-    getOrderDetails
+    getOrderDetails,
+    saveOrder,
+    saveOrderDetails
 };
