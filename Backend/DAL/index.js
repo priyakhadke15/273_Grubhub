@@ -7,7 +7,7 @@ const { getPersons, savePerson, editPerson } = require('./persons');
 const { getItems, saveItem, editItem, delItem } = require('./items');
 const { getRestaurants, saveRestaurant, editRestaurant } = require('./restaurants');
 const { getOrders, saveOrder, cancelOrder, } = require('./orders');
-const { getOrderDetails, saveOrderDetails } = require('./orders');
+const { getOrderDetails, saveOrderDetails } = require('./orderdetails');
 
 const pool = mysql.createPool({
     host: sql_host,
