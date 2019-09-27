@@ -102,9 +102,34 @@ const delItem = connection => item => {
         });
     });
 };
+const editSections = connection => section => {
+    const { restaurantId, secName, secNameOld } = section;
+    let query = `UPDATE Items`;
+    const clause = [];
+    if (restaurantId) {
+        clause.push(`restaurantId='${restaurantId}'`);
+    }
+    if (secNameOld) {
+        clause.push(`secName='${secNameOld}'`);
+    }
+    query += ` set secName='${secName}' where ${clause.join(' and ')}`;
+    return new Promise((resolve, reject) => {
+        connection.query(query, (error, results, fields) => {
+            // release connection first!
+            connection.release();
+            if (error) {
+                reject(error);
+            } else {
+                resolve({ results, fields });
+            }
+        });
+    });
+
+};
 module.exports = {
     getItems,
     saveItem,
     editItem,
-    delItem
+    delItem,
+    editSections
 };

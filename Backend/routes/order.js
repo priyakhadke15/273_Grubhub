@@ -11,7 +11,7 @@ const { getRestaurants } = require('../DAL');
 // get the buyers order list for past orders and upcoming orders  etc
 router.get('/', async function (req, res, next) {
 
-    const { orderID, restaurantId, buyerId, orderDate, deliveryAdd, status, price } = req.body;
+    const { orderID, restaurantId, orderDate, deliveryAdd, status, price } = req.query;
     //check if user is logged in
     if (!(req.cookies.authCookie)) {
         console.error("Unauthorised access");

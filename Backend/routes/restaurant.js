@@ -6,6 +6,7 @@ const { jwtsecret } = require('../config');
 const { getRestaurants, saveRestaurant, editRestaurant } = require('../DAL')
 const { getItems } = require('../DAL');
 const { getOrders } = require('../DAL');
+const { editSections } = require('../DAL');
 
 // edit the owner's restaurant
 router.put('/', async function (req, res, next) {
@@ -92,8 +93,35 @@ router.get('/order', async function (req, res, next) {
     catch (e) {
         res.status(500).json({ message: e.message });
     }
+});
+//update sections based on old value and restaurantID
+router.put('/section', async function (req, res, next) {
+    const { secName, secNameOld } = req.body;
+    if (!(req.cookies.authCookie)) {
+        console.error("Unauthorised access");
+        return res.status(401).json({ message: "please login to continue" });
+    }
+    try {
+        const user = jwt.verify(req.cookies.authCookie, jwtsecret);
+        if (!user.isSeller) {
+            console.error("Unauthorised access");
+            return res.status(401).json({ message: "please login to continue" });
+        }
+        //check owner is editing his restaurant
+        const { results } = await getRestaurants({ ownerId: user.id });
+        const ownerRest = JSON.parse(JSON.stringify(results[0]));
 
-
+        const section = {
+            restaurantId: ownerRest.restaurantId,
+            secName,
+            secNameOld
+        };
+        const { results: secquery } = await editSections(section);
+        res.json(secquery);
+    }
+    catch (e) {
+        res.status(500).json({ message: e.message });
+    }
 });
 
 module.exports = router;
