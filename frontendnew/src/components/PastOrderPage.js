@@ -1,6 +1,24 @@
 import React, { Component } from 'react';
 
 class PastOrderPage extends Component {
+    async componentDidMount() {
+        console.log('within pastorder did mount');
+        try {
+            const response = await fetch('/api/v1/order?status=delivered', {
+                method: 'get',
+                mode: "cors",
+                redirect: 'follow',
+                headers: {
+                    'content-type': 'application/json'
+                }
+            });
+            const body = await response.json();
+            console.log(body);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
     render() {
         return (
             <div className="fullwidth-block fruits-section category-block">
