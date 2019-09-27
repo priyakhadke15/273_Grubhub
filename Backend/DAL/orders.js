@@ -94,9 +94,27 @@ const saveOrderDetails = connection => orderdetail => {
         });
     });
 };
+//owner should be able to cancel order
+const cancelOrder = connection => order => {
+    const { orderID } = order;
+    let query = `update ${_tableName} set status='cancel' where orderID='${orderID}'`;
+    return new Promise((resolve, reject) => {
+        connection.query(query, (error, results, fields) => {
+            // release connection first!
+            connection.release();
+            if (error) {
+                reject(error);
+            } else {
+                resolve({ results, fields });
+            }
+        });
+    });
+
+};
 module.exports = {
     getOrders,
     getOrderDetails,
     saveOrder,
-    saveOrderDetails
+    saveOrderDetails,
+    cancelOrder
 };

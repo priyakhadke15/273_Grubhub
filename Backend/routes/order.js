@@ -4,7 +4,8 @@ const uuidv4 = require('uuid/v4');
 const jwt = require("jsonwebtoken");
 const { jwtsecret } = require('../config');
 
-const { getOrders, getOrderDetails, saveOrder, saveOrderDetails } = require('../DAL');
+const { getOrders, saveOrder, cancelOrder } = require('../DAL');
+const { getOrderDetails, saveOrderDetails } = require('../DAL');
 const { getItems } = require('../DAL');
 // get the buyers order list for past orders and upcoming orders  etc
 router.get('/', async function (req, res, next) {
@@ -110,5 +111,31 @@ router.post('/', async function (req, res, next) {
         res.status(500).json({ message: e.message });
     }
 });
+router.put('/', async function (req, res, next) {
+    const { orderID } = req.body;
+    //check if user is logged in
+    if (!(req.cookies.authCookie)) {
+        console.error("Unauthorised access");
+        return res.status(401).json({ message: "please login to continue" });
+    }
+    try {
+        const user = jwt.verify(req.cookies.authCookie, jwtsecret);
+        //check if user is seller 
+        if (!user.isSeller) {
+            console.error("Unauthorised access");
+            return res.status(403).json({ message: "Permission needed" });
+        }
+        const order = {
+            orderID
+        };
+        const { results } = await cancelOrder(order);
+        res.json(results);
+    }
+    catch (e) {
+        res.status(500).json({ message: e.message });
 
+    }
+
+
+});
 module.exports = router;
