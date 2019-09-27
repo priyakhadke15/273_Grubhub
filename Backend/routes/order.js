@@ -4,9 +4,10 @@ const uuidv4 = require('uuid/v4');
 const jwt = require("jsonwebtoken");
 const { jwtsecret } = require('../config');
 
-const { getOrders, saveOrder, cancelOrder } = require('../DAL');
+const { getOrders, saveOrder, editOrder } = require('../DAL');
 const { getOrderDetails, saveOrderDetails } = require('../DAL');
 const { getItems } = require('../DAL');
+const { getRestaurants } = require('../DAL');
 // get the buyers order list for past orders and upcoming orders  etc
 router.get('/', async function (req, res, next) {
 
@@ -50,25 +51,33 @@ router.get('/details', async function (req, res, next) {
     }
 });
 //submit the buyer's order
-/* item input in format [{"itemID":"cdf5b752-4b43-4457-adf6-81d83835bf65","quantity":"2"},
-{"itemID":"cdf5b752-4b43-4457-adf6-81d83835bf66","quantity":"1"}]
+/* item input in format [
+    {"itemID":"cdf5b752-4b43-4457-adf6-81d83835bf65","quantity":"2"},
+    {"itemID":"cdf5b752-4b43-4457-adf6-81d83835bf66","quantity":"1"}
+]
 */
 router.post('/', async function (req, res, next) {
+    const { authCookie } = req.cookies;
     var total = 0, ordertotal = 0;
     var randNum = uuidv4();
     const { items, restaurantId, deliveryAdd } = req.body;
     const itemjson = JSON.parse(items);
 
-    //check if user is logged in
-    if (!(req.cookies.authCookie)) {
-        console.error("Unauthorised access");
-        return res.status(401).json({ message: "please login to continue" });
+    try {
+        //check if user is logged in
+        if (!authCookie || !jwt.verify(authCookie, jwtsecret)) {
+            console.error("Unauthorised access");
+            return res.status(401).json({ message: "please login to continue" });
+        }
+    } catch (e) {
+        res.status(401).json({ message: e.message });
     }
     //check items are selected
     if (itemjson.length == 0) {
         console.error("No item selected");
         return res.status(400).json({ message: "please select atleast one item" });
     }
+
     var d = new Date();
     var curr_date = d.getDate();
     var curr_month = d.getMonth() + 1;
@@ -95,7 +104,6 @@ router.post('/', async function (req, res, next) {
             await saveOrderDetails(orderdetail);
             ordertotal += total;
         }
-        const user = jwt.verify(req.cookies.authCookie, jwtsecret);
         const order = {
             orderID: randNum,
             buyerId: user.id,   //buyer's userid is fetched from authcookie
@@ -112,7 +120,7 @@ router.post('/', async function (req, res, next) {
     }
 });
 router.put('/', async function (req, res, next) {
-    const { orderID } = req.body;
+    const { orderID, status } = req.body;
     //check if user is logged in
     if (!(req.cookies.authCookie)) {
         console.error("Unauthorised access");
@@ -125,17 +133,25 @@ router.put('/', async function (req, res, next) {
             console.error("Unauthorised access");
             return res.status(403).json({ message: "Permission needed" });
         }
-        const order = {
-            orderID
+        //check if the logged in user is owner of restaurant for which order is received
+        let order = { orderID };
+        const { results } = await getOrders(order);
+        const restDetail = JSON.parse(JSON.stringify(results[0]));
+        const { results: restOwner } = await getRestaurants({ ownerId: user.id });
+        const ownerRest = JSON.parse(JSON.stringify(restOwner[0]));
+
+        if (restDetail.restaurantId !== ownerRest.restaurantId) {
+            console.error("Forbidden");
+            return res.status(403).json({ message: "Forbidden" });
+        }
+        order = {
+            orderID, status
         };
-        const { results } = await cancelOrder(order);
-        res.json(results);
+        const { results: queryResult } = await editOrder(order);
+        res.json(queryResult);
     }
     catch (e) {
         res.status(500).json({ message: e.message });
-
     }
-
-
 });
 module.exports = router;

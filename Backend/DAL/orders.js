@@ -58,9 +58,9 @@ const saveOrder = connection => order => {
     });
 };
 //owner should be able to cancel order
-const cancelOrder = connection => order => {
-    const { orderID } = order;
-    let query = `update ${_tableName} set status='cancel' where orderID='${orderID}'`;
+const editOrder = connection => order => {
+    const { orderID, status } = order;
+    let query = `update ${_tableName} set status='${status}' where orderID='${orderID}'`;
     return new Promise((resolve, reject) => {
         connection.query(query, (error, results, fields) => {
             // release connection first!
@@ -77,5 +77,5 @@ const cancelOrder = connection => order => {
 module.exports = {
     getOrders,
     saveOrder,
-    cancelOrder
+    editOrder
 };
