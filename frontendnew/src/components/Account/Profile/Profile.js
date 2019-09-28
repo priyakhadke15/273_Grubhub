@@ -90,7 +90,7 @@ class Profile extends Component {
                 <div className="fullwidth-block fruits-section category-block">
                     <div className="contact-form" style={{ width: "80%", margin: "0 auto" }}>
                         <div style={{ width: "20%", height: "auto", margin: "0 auto" }}>
-                            <img style={{ imageOrientation: "from-image", width: "100%", height: "auto", position: "relative" }} src={this.state.profileImage}></img>
+                            <img style={{ imageOrientation: "from-image", width: "13vw", height: "auto", position: "relative" }} src={this.state.profileImage}></img>
                             <input type="file" onChange={this.onImageSelect.bind(this)} style={{ background: "none", border: "none" }} alt="Choose image" />
                         </div>
                         <div className="namediv">
