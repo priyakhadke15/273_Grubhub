@@ -3,13 +3,61 @@ import { connect } from 'react-redux';
 import { login, logout } from '../actions';
 
 class SiteDescription extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = { msg: '' };
+        this.searchRef = React.createRef();
+    }
+
+    async search(e) {
+        e.preventDefault();
+        const sleep = msec => new Promise(r => setTimeout(r, msec));
+        try {
+            this.props.toggleSpinner('Searching...');
+            const response = await fetch(`/api/v1/item?itemName=${this.searchRef.current.value}`);
+            const res = await response.json();
+            await sleep(1000);
+            this.props.toggleSpinner();
+            if (response.status === 200) {
+                console.log(res)
+                this.setState({
+                    msg: ''
+                });
+            } else if (response.status === 401) {
+                this.setState({ msg: 'please login to continue...' });
+            }
+        } catch (e) {
+            await sleep(1000);
+            this.props.toggleSpinner();
+            this.setState({ msg: e.message || e });
+        }
+    }
+
     render() {
         return (
             <div className="hero" style={{ width: "100%", backgroundColor: "rgba(255,255,255,0.5)", backgroundBlendMode: "overlay", backgroundImage: 'url("/food1.jpg")', backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
                 {this.props.isLoggedIn && (
                     <div className="container">
-                        <h1 className="site-title">GrubHub</h1>
-                        <small className="site-description">How to order food ? with GrubHub its easy</small>
+                        <div className="contact-form" style={{ width: "80%", "margin": "0 auto" }}>
+                            <form onSubmit={this.search.bind(this)}>
+                                <input type="text" ref={this.searchRef} placeholder="Thai food" required autoFocus style={{ width: "80%" }} />
+                                <input type="submit" value="Search" style={{ marginTop: "5px" }} />
+                            </form>
+                            <pre style={{ color: "blue" }}>{this.state.msg}</pre>
+                        </div>
+                        <div className="recipes-list">
+                            <article className="recipe">
+                                <figure className="recipe-image"><img src="/pizza.jpg" alt="Food 1" /></figure>
+                                <div className="recipe-detail">
+                                    <h2 className="recipe-title"><a href="single.html">Duis pellentesque nulla eget vehicula porta</a></h2>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem aliquam minima ullam officiis eum facilis impedit molestiae ducimus nam. Et, saepe commodi quisquam, porro eaque eligendi neque voluptates numquam perspiciatis.</p>
+                                    <div className="recipe-meta">
+                                        <span className="time"><img src="images/icon-time.png" /> 40 min</span>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
                     </div>
                 )};
                 {!this.props.isLoggedIn && (

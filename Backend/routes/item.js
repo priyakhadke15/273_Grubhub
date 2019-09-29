@@ -11,7 +11,7 @@ const { getItems, saveItem, editItem, delItem } = require('../DAL')
 // get the item list for searching
 router.get('/', async function (req, res, next) {
     let item;
-    const { itemName, iDesc, price, secName } = req.body;
+    const { itemName, iDesc, price, secName } = req.query;
     if (!(req.cookies.authCookie)) {
         console.error("Unauthorised access");
         return res.status(401).json({ message: "please login to continue" });
