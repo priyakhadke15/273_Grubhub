@@ -2,7 +2,8 @@
 var expect = require('chai').expect;
 var request = (require('request').defaults({ jar: true }));
 const { spawn } = require('child_process');
-const ls = spawn('node', ['../Backend/server.js'], { "env": { ...process.env, "PORT": 3005 } });
+const path = require('path');
+const ls = spawn('node', [path.join(__dirname, '..', 'server.js')], { "env": { ...process.env, "PORT": 3005 } });
 
 describe('GrubHub', function () {
 
