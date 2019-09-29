@@ -2,26 +2,25 @@ const _tableName = 'Items';
 
 const getItems = connection => item => {
     const { itemID, restaurantId, itemName, iDesc, price, secName } = item;
-    let query = `select * from ${_tableName}`;
+    let query = `select * from ${_tableName} INNER JOIN Restaurants ON Items.restaurantId = Restaurants.restaurantId`;
     const clause = [];
     if (itemID) {
-        clause.push(`itemID='${itemID}'`);
+        clause.push(`Items.itemID='${itemID}'`);
     }
     if (itemName) {
-        clause.push(`itemName LIKE '%${itemName}%'`);
+        clause.push(`Items.itemName LIKE '%${itemName}%'`);
     }
     if (restaurantId) {
-        clause.push(`restaurantId='${restaurantId}'`);
+        clause.push(`Items.restaurantId='${restaurantId}'`);
     }
-
     if (iDesc) {
-        clause.push(`iDesc like '%${iDesc}%'`);
+        clause.push(`Items.iDesc like '%${iDesc}%'`);
     }
     if (price) {
-        clause.push(`price<='${price}'`);
+        clause.push(`Items.price<='${price}'`);
     }
     if (secName) {
-        clause.push(`secName like '%${secName}%'`);
+        clause.push(`Items.secName like '%${secName}%'`);
     }
     query += clause.length > 0 ? ` where ${clause.join(' and ')}` : ''
     return new Promise((resolve, reject) => {
