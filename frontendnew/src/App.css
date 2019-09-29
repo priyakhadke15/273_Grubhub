@@ -579,7 +579,7 @@ p { margin-top: 0; }
 .recipe .recipe-title { font-weight: 300; }
 
 .recipe-meta span.time, .recipe-meta span.calorie, .recipe-meta span.comment { margin-right: 15px; }
-.recipe-meta span.time img, .recipe-meta span.calorie img, .recipe-meta span.comment img { vertical-align: middle; margin-right: 10px; }
+.recipe-meta span.time img, .recipe-meta span.calorie img, .recipe-meta span.comment img { vertical-align: middle; margin-right: 5px; }
 
 .ingredient { background-color: white; border-radius: 20px; padding: 30px; margin: 30px 0; }
 .ingredient h3 { font-size: 18px; font-size: 1.125rem; color: #736f5c; margin-top: 0; font-weight: 400; }

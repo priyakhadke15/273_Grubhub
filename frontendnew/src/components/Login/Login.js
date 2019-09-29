@@ -8,7 +8,6 @@ import { login, logout } from '../../actions';
 class Login extends Component {
     constructor(props) {
         super(props);
-        console.log('login props', props.signupEmail)
         this.state = {
             username: props.signupEmail || "",
             password: "",

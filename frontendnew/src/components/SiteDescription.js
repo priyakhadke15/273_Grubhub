@@ -6,7 +6,10 @@ class SiteDescription extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { msg: '' };
+        this.state = {
+            msg: '',
+            items: []
+        };
         this.searchRef = React.createRef();
     }
 
@@ -22,7 +25,8 @@ class SiteDescription extends Component {
             if (response.status === 200) {
                 console.log(res)
                 this.setState({
-                    msg: ''
+                    msg: '',
+                    items: res
                 });
             } else if (response.status === 401) {
                 this.setState({ msg: 'please login to continue...' });
@@ -36,32 +40,39 @@ class SiteDescription extends Component {
 
     render() {
         return (
-            <div className="hero" style={{ width: "100%", backgroundColor: "rgba(255,255,255,0.5)", backgroundBlendMode: "overlay", backgroundImage: 'url("/food1.jpg")', backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
+            <div>
                 {this.props.isLoggedIn && (
-                    <div className="container">
-                        <div className="contact-form" style={{ width: "80%", "margin": "0 auto" }}>
-                            <form onSubmit={this.search.bind(this)}>
-                                <input type="text" ref={this.searchRef} placeholder="Thai food" required autoFocus style={{ width: "80%" }} />
-                                <input type="submit" value="Search" style={{ marginTop: "5px" }} />
-                            </form>
-                            <pre style={{ color: "blue" }}>{this.state.msg}</pre>
-                        </div>
-                        <div className="recipes-list">
-                            <article className="recipe">
-                                <figure className="recipe-image"><img src="/pizza.jpg" alt="Food 1" /></figure>
-                                <div className="recipe-detail">
-                                    <h2 className="recipe-title"><a href="single.html">Duis pellentesque nulla eget vehicula porta</a></h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem aliquam minima ullam officiis eum facilis impedit molestiae ducimus nam. Et, saepe commodi quisquam, porro eaque eligendi neque voluptates numquam perspiciatis.</p>
-                                    <div className="recipe-meta">
-                                        <span className="time"><img src="images/icon-time.png" /> 40 min</span>
-                                    </div>
-                                </div>
-                            </article>
-                        </div>
-                    </div>
-                )};
-                {!this.props.isLoggedIn && (
                     <div>
+                        <div className="hero container" style={{ width: "100%", backgroundColor: "rgba(255,255,255,0.5)", backgroundBlendMode: "overlay", backgroundImage: 'url("/food1.jpg")', backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
+                            <div className="contact-form" style={{ width: "80%", "margin": "0 auto" }}>
+                                <form onSubmit={this.search.bind(this)}>
+                                    <input type="text" ref={this.searchRef} placeholder="Thai food" required autoFocus style={{ width: "80%" }} />
+                                    <input type="submit" value="Search" style={{ marginTop: "5px" }} />
+                                </form>
+                                <pre style={{ color: "blue" }}>{this.state.msg}</pre>
+                            </div>
+                        </div>
+                        {this.state.items.length > 0 && (<div className="container">
+                            <div className="recipes-list">
+                                {this.state.items.map(item => (
+                                    <article className="recipe" key={item.itemID}>
+                                        <figure className="recipe-image"><img src={item.iImage && item.iImage !== "undefined" ? item.iImage : "/generic-item.png"} alt={item.itemName} /></figure>
+                                        <div className="recipe-detail">
+                                            <h2 className="recipe-title"><a href="#">{item.itemName}</a></h2>
+                                            <p>{item.iDesc}</p>
+                                            <div className="recipe-meta">
+                                                <span className="time"><img src="images/icon-time.png" />40 min</span>
+                                                <span className="time"><img src="images/dollar.png" />{item.price}</span>
+                                            </div>
+                                        </div>
+                                    </article>
+                                ))}
+                            </div>
+                        </div>)}
+                    </div>
+                )}
+                {!this.props.isLoggedIn && (
+                    <div className="hero" style={{ width: "100%", backgroundColor: "rgba(255,255,255,0.5)", backgroundBlendMode: "overlay", backgroundImage: 'url("/food1.jpg")', backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
                         <div className="container">
                             <h1 className="site-title">GrubHub</h1>
                             <small className="site-description">How to order food ? with GrubHub its easy</small>
@@ -90,7 +101,7 @@ class SiteDescription extends Component {
                             </div>
                         </div>
                     </div>
-                )};
+                )}
             </div>
         )
     }

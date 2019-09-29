@@ -8,10 +8,10 @@ class SiteFooter extends Component {
                 <div className="container" >
                     <i className="icon-cupcake logo"></i>
                     <nav className="footer-navigation" >
-                        <a href="about.html">About me</a>
-                        <a href="offer.html">My offer</a>
-                        <a href="recipe.html">Recipes</a>
-                        <a href="contact.html">Contact</a>
+                        <a href="#">About me</a>
+                        <a href="#">My offer</a>
+                        <a href="#">Recipes</a>
+                        <a href="#">Contact</a>
                     </nav>
                     <div className="subscribe">
                         <form action="#">
