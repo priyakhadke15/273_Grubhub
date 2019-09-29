@@ -90,11 +90,11 @@ legend { border: 0; padding: 0; white-space: normal; }
 
 button, input, select, textarea { font-family: inherit; font-size: 100%; margin: 0; vertical-align: baseline; }
 
-button, input { line-height: normal; }
+button, select, input { line-height: normal; }
 
 button, select { text-transform: none; }
 
-button, html input[type="button"], input[type="reset"], input[type="submit"] { -webkit-appearance: button; cursor: pointer; }
+button, select, html input[type="button"], input[type="reset"], input[type="submit"] { -webkit-appearance: button; cursor: pointer; }
 
 button[disabled], input[disabled] { cursor: default; }
 
@@ -143,8 +143,8 @@ p { margin-top: 0; }
 .contact-detail img { vertical-align: middle; margin-right: 5px; }
 .contact-detail span { margin-right: 10px; display: inline-block; }
 
-.contact-form input:not([type="submit"]), .contact-form textarea { width: 100%; padding: 20px; border-radius: 20px; background-color: white; font-size: 14px; font-size: 0.875rem; border: 2px solid white; margin-bottom: 20px; outline: none; -webkit-transition: .3s ease; transition: .3s ease; }
-.contact-form input:not([type="submit"]):hover, .contact-form input:not([type="submit"]):focus, .contact-form textarea:hover, .contact-form textarea:focus { border-color: #f16a54; }
+.contact-form select, input:not([type="submit"]), .contact-form textarea { width: 100%; padding: 20px; border-radius: 20px; background-color: white; font-size: 14px; font-size: 0.875rem; border: 2px solid white; margin-bottom: 20px; outline: none; -webkit-transition: .3s ease; transition: .3s ease; }
+.contact-form select:hover, input:not([type="submit"]):hover, .contact-form input:not([type="submit"]):focus, .contact-form textarea:hover, .contact-form textarea:focus { border-color: #f16a54; }
 .contact-form textarea { height: 220px; }
 .contact-form input[type="submit"] { float: right; background-color: #f16a54; color: #f2efdc; padding: 15px 30px; border-radius: 30px; border: none; outline: none; -webkit-transition: .3s ease; transition: .3s ease; }
 .contact-form input[type="submit"]:hover, .contact-form input[type="submit"]:focus { background-color: #f59383; }
@@ -573,9 +573,9 @@ p { margin-top: 0; }
 .recipe { *zoom: 1; background-color: white; padding: 15px; border-radius: 150px; margin-bottom: 30px; }
 .recipe:after { content: " "; clear: both; display: block; overflow: hidden; height: 0; }
 @media screen and (max-width: 990px) { .recipe { border-radius: 10px; } }
-.recipe .recipe-image { width: 10vw; height: 10vw; border-radius: 50%; overflow: hidden; float: left; margin-right: 45px; text-align: center; }
+.recipe .recipe-image { width: 15vw; height: 15vw; border-radius: 50%; overflow: hidden; float: left; margin-right: 45px; text-align: center; }
 @media screen and (max-width: 640px) { .recipe .recipe-image { float: none; display: block; margin: 0 auto 30px; } }
-.recipe .recipe-image img { display: block; width: 10vw; height: 10vw; }
+.recipe .recipe-image img { display: block; width: 15vw; height: 15vw; }
 .recipe .recipe-title { font-weight: 300; }
 
 .recipe-meta span.time, .recipe-meta span.calorie, .recipe-meta span.comment { margin-right: 15px; }
