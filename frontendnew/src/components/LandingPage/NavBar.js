@@ -8,11 +8,6 @@ import { login, logout } from '../../actions';
 class NavBar extends Component {
     constructor(props) {
         super(props);
-        this.handleLogout = this.handleLogout.bind(this);
-    }
-
-    handleLogout = () => {
-        this.props.logout();
     }
 
     render() {
@@ -22,11 +17,10 @@ class NavBar extends Component {
                     <div className="main-navigation pull-right">
                         <div>
                             <ul className="menu">
-                                <li className="menu-item"><Link to="/Home">Home</Link></li>
-                                {this.props.isLoggedIn && !this.props.isSeller && <li className="menu-item"><Link to="/searchpage">Catering</Link></li>}
-                                {this.props.isLoggedIn && <li className="menu-item"><Link to="/account/myaccount">Account</Link></li>}
-                                {this.props.isLoggedIn && <li className="menu-item"><Link to="/login" onClick={this.handleLogout}>Logout</Link></li>}
-                                {/* {this.props.isLoggedIn && <li className="menu-item"><a href="#" onClick={this.handleLogout}>Logout </a></li>} */}
+                                {!this.props.isLoggedIn && <li className="menu-item"><Link to="/home">Home</Link></li>}
+                                {this.props.isLoggedIn && !this.props.isSeller && <li className="menu-item"><Link to="/search">Search</Link></li>}
+                                {this.props.isLoggedIn && <li className="menu-item"><Link to="/account/profile">Account</Link></li>}
+                                {this.props.isLoggedIn && <li className="menu-item"><Link to="/login" onClick={this.props.logout.bind(this)}>Logout</Link></li>}
                                 {!this.props.isLoggedIn && <li className="menu-item"><Link to="/login">Login</Link></li>}
                             </ul>
                         </div>

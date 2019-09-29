@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import PastOrderPage from '../PastOrderPage';
 import Profile from './Profile/Profile';
-import Restaurant from './Restaurant';
+import Restaurant from './Restaurant/Restaurant';
 import './Account.css';
 import { login, logout } from '../../actions';
 
@@ -14,7 +14,6 @@ class Account extends Component {
                 <div style={{ display: "flex" }}>
                     <div className="leftdiv" >
                         <ul className="menu" >
-                            <li className="menu-item"><Link to="/account/myaccount">Your Account</Link></li>
                             <li className="menu-item"><Link to="/account/profile">Profile</Link></li>
                             {this.props.isSeller && <li className="menu-item"><Link to="/account/restaurant">Restaurant</Link></li>}
                             <li className="menu-item"><Link to="/account/pastorders">Past Orders</Link></li>
@@ -22,7 +21,6 @@ class Account extends Component {
                         </ul>
                     </div>
                     <div className="rightdiv">
-                        <Route path="/account/myaccount" component={PastOrderPage} />
                         <Route
                             path="/account/profile"
                             render={props => <Profile {...props} toggleSpinner={this.props.toggleSpinner.bind(this)} />}

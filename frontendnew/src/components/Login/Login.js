@@ -70,7 +70,7 @@ class Login extends Component {
     render() {
         return (
             <div>
-                {this.props.isLoggedIn ? <Redirect to="/Home" /> : null}
+                {this.props.isLoggedIn ? (this.props.isSeller ? <Redirect to="/account/profile" /> : <Redirect to="/search" />) : null}
                 < div className="contact-form"  >
                     <form onSubmit={this.submitLogin}>
                         <input type="email" placeholder="Email" onChange={this.usernameChangeHandler} name="username" required autoFocus />
@@ -87,8 +87,8 @@ class Login extends Component {
 
 const mapStateToProps = state => ({
     isLoggedIn: state.userdata.isLoggedIn,
-    signupEmail: state.userdata.signupEmail
-    // isSeller: state.userdata.isSeller,
+    signupEmail: state.userdata.signupEmail,
+    isSeller: state.userdata.isSeller,
     // userId: state.userdata.id,
     // email: state.userdata.email
 });
