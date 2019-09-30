@@ -49,25 +49,31 @@ class Login extends Component {
     render() {
         return (
             <div>
-                {this.state.items.length > 0 && (<div className="container">
-                    <div className="recipes-list">
-                        {this.state.items.map(item => (
-                            <article className="recipe" key={item.itemID}>
-                                <figure className="recipe-image" style={{ width: "10vw", height: "10vw" }}><img style={{ width: "10vw", height: "10vw" }} src={item.iImage && item.iImage !== "undefined" ? item.iImage : "/generic-item.png"} alt={item.itemName} /></figure>
-                                <div className="recipe-detail">
-                                    <h2 className="recipe-title"><a href="#">{item.itemName}</a></h2>
-                                    <p>{item.iDesc}</p>
-                                    <p>{item.secName}</p>
-                                    <div className="recipe-meta">
-                                        <span className="time"><img src="images/dollar.png" />{item.price}</span>
+                {this.state.items.length > 0 && (
+                    <div className="container">
+                        <div className="contact-form" style={{ width: "80%", display: "flex" }}>
+                            <label>Section:</label>
+                            <input style={{ width: "150vw", marginRight: "3vw" }} type="text" placeholder="Section Name" required />
+                            <input style={{ width: "15vw", backgroundColor: "#f16a54", marginRight: "2vw" }} type="button" value="Change Name" />
+                            <input style={{ width: "15vw", backgroundColor: "#f16a54" }} type="button" value="Delete Section" />
+                        </div>
+                        <div className="recipes-list">
+                            {this.state.items.map(item => (
+                                <article className="recipe" key={item.itemID}>
+                                    <figure className="recipe-image" style={{ width: "10vw", height: "10vw" }}><img style={{ width: "10vw", height: "10vw" }} src={item.iImage && item.iImage !== "undefined" ? item.iImage : "/generic-item.png"} alt={item.itemName} /></figure>
+                                    <div className="recipe-detail">
+                                        <h2 className="recipe-title"><a href="#">{item.itemName}</a></h2>
+                                        <p>{item.iDesc}</p>
+                                        <p>{item.secName}</p>
+                                        <div className="recipe-meta">
+                                            <span className="time"><img src="images/dollar.png" />{item.price}</span>
+                                        </div>
                                     </div>
-                                </div>
-                            </article>
-                        ))}
-                    </div>
-                    <hr />
-                </div>)}
-                < div className="contact-form"  >
+                                </article>
+                            ))}
+                        </div>
+                    </div>)}
+                < div className="contact-form" style={{ width: "60%" }} >
                     <form onSubmit={this.submitLogin} style={{ display: "flex" }}>
                         <div style={{ width: "25vw", marginRight: "20px" }}>
                             <input type="text" placeholder="Item Name" required />
