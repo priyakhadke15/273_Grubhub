@@ -5,6 +5,7 @@ import NavBar from './LandingPage/NavBar'
 import Home from './LandingPage/Home';
 import Signup from './Signup/Signup';
 import Login from './Login/Login';
+import Menu from './Menu/Menu';
 import Account from './Account/Account';
 import Restaurant from './Account/Restaurant/Restaurant';
 import Search from './Search/Search';
@@ -43,6 +44,10 @@ class Main extends Component {
                         <Route
                             path="/login"
                             render={props => <Login {...props} toggleSpinner={this.toggleSpinner.bind(this)} />}
+                        />
+                        <Route
+                            path="/menu"
+                            render={props => <Menu {...props} toggleSpinner={this.toggleSpinner.bind(this)} />}
                         />
                         <Route
                             path="/account"
