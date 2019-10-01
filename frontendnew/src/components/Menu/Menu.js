@@ -1,28 +1,19 @@
 import React, { Component } from 'react';
 import './Menu.css';
-import { connect } from 'react-redux';
-import { login, logout } from '../../actions';
 
-class Login extends Component {
+class Menu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: props.signupEmail || "",
-            password: "",
             msg: '',
             items: {}
         }
-
-        this.usernameChangeHandler = this.usernameChangeHandler.bind(this);
-        this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
-        this.submitLogin = this.submitLogin.bind(this);
     }
 
     async componentDidMount() {
         try {
             const response = await fetch('/api/v1/restaurant/item')
             const body = await response.json();
-            console.log(body);
             if (response.status === 200) {
                 this.setState({
                     items: body.reduce((acc, item) => {
@@ -31,28 +22,27 @@ class Login extends Component {
                     }, {})
                 });
             } else {
-
+                this.setState({ msg: body.message });
             }
         } catch (e) {
             alert(e)
         }
     }
 
-    submitLogin = (e) => {
+    addItem = (e) => {
         const sleep = msec => new Promise(r => setTimeout(r, msec));
         e.preventDefault();
     }
 
-    usernameChangeHandler = (e) => {
-        this.setState({
-            username: e.target.value
-        })
-    }
+    changeSectionName = oldName => async e => {
+        e.preventDefault();
+        // TODO: update all items in this section
+        alert(`changesectionname, ${oldName}, ${e.target.elements.sectionName.value}`);
+    };
 
-    passwordChangeHandler = (e) => {
-        this.setState({
-            password: e.target.value
-        })
+    deleteSection = async sectionname => {
+        // TODO: delete all items in this section
+        alert(`deletesection: ${sectionname}`)
     }
 
     render() {
@@ -61,12 +51,14 @@ class Login extends Component {
                 {Object.keys(this.state.items).length > 0 && (
                     <div className="container">
                         {Object.keys(this.state.items).map(section => (
-                            <div>
+                            <div key={section}>
                                 <div className="contact-form" style={{ width: "80%", display: "flex" }}>
                                     <label>Section:</label>
-                                    <input style={{ width: "150vw", marginRight: "3vw" }} value={section} type="text" placeholder="Section Name" required />
-                                    <input style={{ width: "15vw", color: "white", backgroundColor: "#f16a54", marginRight: "2vw" }} type="button" value="Change Name" />
-                                    <input style={{ width: "15vw", backgroundColor: "#f16a54", color: "white" }} type="button" value="Delete Section" />
+                                    <form onSubmit={this.changeSectionName(section).bind(this)} style={{ width: "80%", display: "flex" }}>
+                                        <input style={{ width: "150vw", marginRight: "3vw" }} name="sectionName" defaultValue={section} type="text" placeholder="Section Name" required />
+                                        <input style={{ marginRight: "2vw", height: "58px" }} type="submit" value="Change Name" />
+                                    </form>
+                                    <input type="button" onClick={() => this.deleteSection(section)} value="Delete Section" />
                                 </div>
                                 <div className="recipes-list">
                                     {this.state.items[section].map(item => (
@@ -87,7 +79,7 @@ class Login extends Component {
                         ))}
                     </div>)}
                 < div className="contact-form" style={{ width: "60%" }} >
-                    <form onSubmit={this.submitLogin} style={{ display: "flex" }}>
+                    <form onSubmit={this.addItem.bind(this)} style={{ display: "flex" }}>
                         <div style={{ width: "25vw", marginRight: "20px" }}>
                             <input type="text" placeholder="Item Name" required />
                             <input type="number" placeholder="Price" required />
@@ -96,6 +88,7 @@ class Login extends Component {
                         <div style={{ flexGrow: "1" }}>
                             <textarea placeholder="Item Description" required />
                             <input type="submit" value="Add New Item" />
+                            <pre>{this.state.msg}</pre>
                         </div>
                     </form>
                 </div >
@@ -104,17 +97,4 @@ class Login extends Component {
     }
 }
 
-const mapStateToProps = state => ({
-    isLoggedIn: state.userdata.isLoggedIn,
-    isSeller: state.userdata.isSeller,
-    signupEmail: state.userdata.signupEmail,
-    // userId: state.userdata.id,
-    // email: state.userdata.email
-});
-
-const mapDispatchToProps = dispatch => ({
-    login: () => dispatch(login()),
-    logout: () => dispatch(logout())
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Menu;
