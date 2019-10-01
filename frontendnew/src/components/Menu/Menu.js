@@ -63,7 +63,7 @@ class Menu extends Component {
                                 <div className="recipes-list">
                                     {this.state.items[section].map(item => (
                                         <article className="recipe" key={item.itemID}>
-                                            <figure className="recipe-image" style={{ width: "10vw", height: "10vw" }}><img style={{ width: "10vw", height: "10vw" }} src={item.iImage && item.iImage !== "undefined" ? item.iImage : "/generic-item.png"} alt={item.itemName} /></figure>
+                                            <figure className="recipe-image" style={{ width: "170px", height: "170px" }}><img style={{ width: "170px", height: "170px" }} src={item.iImage && item.iImage !== "undefined" ? item.iImage : "/generic-item.png"} alt={item.itemName} /></figure>
                                             <div className="recipe-detail">
                                                 <h2 className="recipe-title"><a href="#">{item.itemName}</a></h2>
                                                 <p>{item.iDesc}</p>
