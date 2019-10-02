@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import PastOrderPage from '../PastOrderPage';
+import PastOrderPage from './PastOrderPage/PastOrderPage';
+import UpcomingOrderPage from './UpcomingOrder/UpcomingOrderPage';
 import Profile from './Profile/Profile';
 import Restaurant from './Restaurant/Restaurant';
 import './Account.css';
@@ -30,7 +31,7 @@ class Account extends Component {
                             render={props => <Restaurant {...props} toggleSpinner={this.props.toggleSpinner.bind(this)} />}
                         />
                         <Route path="/account/pastorders" component={PastOrderPage} />
-                        <Route path="/account/upcomingorders" component={PastOrderPage} />
+                        <Route path="/account/upcomingorders" component={UpcomingOrderPage} />
                     </div>
                 </div>
             </Router>

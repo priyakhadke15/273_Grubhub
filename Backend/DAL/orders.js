@@ -2,7 +2,8 @@ const _tableName = 'Orders';
 
 const getOrders = connection => order => {
     const { orderID, restaurantId, buyerId, orderDate, deliveryAdd, status, price } = order;
-    let query = `select * from ${_tableName}`;
+    let query = `select * from ${_tableName} INNER JOIN Restaurants ON Orders.restaurantId = Restaurants.restaurantId `;
+
     const clause = [];
     if (orderID) {
         clause.push(`orderID='${orderID}'`);

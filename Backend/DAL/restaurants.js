@@ -11,7 +11,7 @@ const getRestaurants = connection => (restaurant = {}) => {
         clause.push(`ownerId='${ownerId}'`);
     }
     if (cuisine) {
-        clause.push(`cuisine='${cuisine}'`);
+        clause.push(`cuisine LIKE '%${cuisine}%'`);
     }
     if (address) {
         clause.push(`address LIKE '%${address}%'`);

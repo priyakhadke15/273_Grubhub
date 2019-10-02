@@ -87,6 +87,7 @@ router.post('/', async function (req, res, next) {
     var hour = d.getHours();
 
     try {
+        const user = jwt.verify(authCookie, jwtsecret);
         //get item price for each item and calculate order price
         for (var i = 0; i < itemjson.length; i++) {
             const { itemID, quantity } = itemjson[i];
