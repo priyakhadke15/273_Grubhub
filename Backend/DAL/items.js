@@ -73,7 +73,7 @@ const editItem = connection => item => {
         clause.push(`secName='${secName}'`);
     }
     query += ` SET ${clause.join(' , ')}`;
-    query += `where itemID='${itemID}'`;
+    query += ` where itemID='${itemID}'`;
     return new Promise((resolve, reject) => {
         connection.query(query, (error, results, fields) => {
             // release connection first!

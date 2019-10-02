@@ -6,14 +6,39 @@ class Menu extends Component {
         super(props);
         this.state = {
             msg: '',
-            items: {}
+            // items: {
+            //     "dinner": [
+            //         {
+            //             "address": "N Street,San Jose",
+            //             "cuisine": "Bakery",
+            //             "iDesc": "Mint Boba Tea",
+            //             "iImage": null,
+            //             "image": "",
+            //             "itemID": "cdf5b752-4b43-4457-adf6-81d83835bf65",
+            //             "itemName": "Boba Tea",
+            //             "name": "CafeCool",
+            //             "ownerId": "80a38bca-e310-4f3d-a48b-48a55688108c",
+            //             "price": 3.23,
+            //             "restaurantId": "cdf5b752-4b43-4457-adf6-81d83835bf65",
+            //             "secName": "dinner",
+            //             "zipcode": 95113
+            //         }
+            //     ]
+            // },
+            items: {},
+            foodImage: "/generic-item.png",
+            imageTargetFile: ''
         }
     }
 
-    async componentDidMount() {
+    async repaintMenu() {
+        const sleep = msec => new Promise(r => setTimeout(r, msec));
         try {
-            const response = await fetch('/api/v1/restaurant/item')
+            this.props.toggleSpinner("Fetching....");
+            const response = await fetch('/api/v1/restaurant/item');
             const body = await response.json();
+            await sleep(1500);
+            this.props.toggleSpinner();
             if (response.status === 200) {
                 this.setState({
                     items: body.reduce((acc, item) => {
@@ -29,20 +54,62 @@ class Menu extends Component {
         }
     }
 
+    async componentDidMount() {
+        this.repaintMenu();
+    }
+
     addItem = (e) => {
         const sleep = msec => new Promise(r => setTimeout(r, msec));
         e.preventDefault();
     }
 
-    changeSectionName = oldName => async e => {
+    changeSectionName = oldname => async e => {
         e.preventDefault();
-        // TODO: update all items in this section
-        alert(`changesectionname, ${oldName}, ${e.target.elements.sectionName.value}`);
+        const newname = e.target.elements.sectionName.value;
+        if (oldname === newname) {
+            // do nothing
+            return;
+        }
+        // get all items for this section
+        const itemIds = Array.isArray(this.state.items[oldname]) ? this.state.items[oldname].map(i => i.itemID) : [];
+        const updatePromises = [];
+        try {
+            this.props.toggleSpinner("Updating...");
+            itemIds.forEach(itemID => {
+                updatePromises.push(fetch('/api/v1/item', {
+                    method: 'put',
+                    mode: "cors",
+                    redirect: 'follow',
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify({ itemID, secName: newname })
+                }))
+            });
+            // something can be done with the responses (like check if all were 200ok)
+            // but ok to leave it out for now
+            await Promise.all(updatePromises);
+            this.props.toggleSpinner();
+            this.repaintMenu();
+        } catch (err) {
+            this.props.toggleSpinner();
+            this.setState({ msg: err.message || err });
+            this.repaintMenu();
+        }
     };
 
     deleteSection = async sectionname => {
         // TODO: delete all items in this section
         alert(`deletesection: ${sectionname}`)
+    }
+
+    onImageSelect(event) {
+        if (event.target.files && event.target.files[0]) {
+            this.setState({
+                foodImage: URL.createObjectURL(event.target.files[0]),
+                imageTargetFile: event.target.files[0]
+            });
+        }
     }
 
     render() {
@@ -77,18 +144,25 @@ class Menu extends Component {
                                 </div>
                             </div>
                         ))}
+                        <hr />
                     </div>)}
                 < div className="contact-form" style={{ width: "60%" }} >
-                    <form onSubmit={this.addItem.bind(this)} style={{ display: "flex" }}>
-                        <div style={{ width: "25vw", marginRight: "20px" }}>
-                            <input type="text" placeholder="Item Name" required />
-                            <input type="number" placeholder="Price" required />
-                            <input type="text" placeholder="Section" required />
+                    <form onSubmit={this.addItem.bind(this)} >
+                        <div style={{ width: "20%", height: "auto", margin: "0 auto" }}>
+                            <img style={{ imageOrientation: "from-image", width: "13vw", height: "auto", position: "relative" }} src={this.state.foodImage}></img>
+                            <input type="file" onChange={this.onImageSelect.bind(this)} style={{ background: "none", border: "none" }} alt="Choose image" />
                         </div>
-                        <div style={{ flexGrow: "1" }}>
-                            <textarea placeholder="Item Description" required />
-                            <input type="submit" value="Add New Item" />
-                            <pre>{this.state.msg}</pre>
+                        <div style={{ display: "flex" }}>
+                            <div style={{ width: "25vw", marginRight: "20px" }}>
+                                <input type="text" placeholder="Item Name" required />
+                                <input type="number" placeholder="Price" required />
+                                <input type="text" placeholder="Section" required />
+                            </div>
+                            <div style={{ flexGrow: "1" }}>
+                                <textarea placeholder="Item Description" required />
+                                <input type="submit" value="Add New Item" />
+                                <pre>{this.state.msg}</pre>
+                            </div>
                         </div>
                     </form>
                 </div >
