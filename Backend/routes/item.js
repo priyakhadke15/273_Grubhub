@@ -89,8 +89,7 @@ router.put('/', async function (req, res, next) {
 });
 //delete item
 router.delete('/', async function (req, res, next) {
-    let rest;
-    const { itemID } = req.body;
+    const { itemID } = req.query;
     if (!(req.cookies.authCookie)) {
         console.error("Unauthorised access");
         return res.status(401).json({ message: "please login to continue" });
@@ -103,10 +102,9 @@ router.delete('/', async function (req, res, next) {
         }
         const item = { itemID }
         await delItem(item);
-        res.json({ message: "Details updated" });
-    }
-    catch (e) {
-        res.status(500).json({ message: e.message });
+        return res.json({ message: "Details updated" });
+    } catch (e) {
+        return res.status(500).json({ message: e.message });
     }
 });
 module.exports = router;

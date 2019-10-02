@@ -54,7 +54,8 @@ class Menu extends Component {
                 this.setState({ msg: body.message });
             }
         } catch (e) {
-            alert(e)
+            this.props.toggleSpinner();
+            this.setState({ msg: e.message || e });
         }
     }
 
@@ -62,9 +63,37 @@ class Menu extends Component {
         this.repaintMenu();
     }
 
-    addItem = (e) => {
-        const sleep = msec => new Promise(r => setTimeout(r, msec));
+    addItem = async e => {
         e.preventDefault();
+        const { itemName, iDesc, price, secName } = e.target.elements;
+        try {
+            this.props.toggleSpinner("Adding...");
+            const response = await fetch('/api/v1/item', {
+                method: 'POST',
+                mode: "cors",
+                redirect: 'follow',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    itemName: itemName.value,
+                    iDesc: iDesc.value,
+                    price: price.value,
+                    secName: secName.value
+                })
+            });
+            this.props.toggleSpinner();
+            if (response.status !== 200) {
+                const body = await response.json();
+                this.setState({ msg: body.message || body.msg });
+            } else {
+                this.repaintMenu();
+            }
+        } catch (err) {
+            this.props.toggleSpinner();
+            this.setState({ msg: err.message || err });
+            this.repaintMenu();
+        }
     }
 
     changeSectionName = oldname => async e => {
@@ -103,8 +132,31 @@ class Menu extends Component {
     };
 
     deleteSection = async sectionname => {
-        // TODO: delete all items in this section
-        alert(`deletesection: ${sectionname}`)
+        // get all items for this section
+        const itemIds = Array.isArray(this.state.items[sectionname]) ? this.state.items[sectionname].map(i => i.itemID) : [];
+        const deletePromises = [];
+        try {
+            this.props.toggleSpinner("Updating...");
+            itemIds.forEach(itemID => {
+                deletePromises.push(fetch(`/api/v1/item?itemID=${itemID}`, {
+                    method: 'delete',
+                    mode: "cors",
+                    redirect: 'follow',
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                }))
+            });
+            // something can be done with the responses (like check if all were 200ok)
+            // but ok to leave it out for now
+            await Promise.all(deletePromises);
+            this.props.toggleSpinner();
+            this.repaintMenu();
+        } catch (err) {
+            this.props.toggleSpinner();
+            this.setState({ msg: err.message || err });
+            // this.repaintMenu();
+        }
     }
 
     onImageSelect(event) {
@@ -167,12 +219,12 @@ class Menu extends Component {
                         </div>
                         <div style={{ display: "flex" }}>
                             <div style={{ width: "25vw", marginRight: "20px" }}>
-                                <input type="text" placeholder="Item Name" required />
-                                <input type="number" placeholder="Price" required />
-                                <input type="text" placeholder="Section" required />
+                                <input type="text" name="itemName" placeholder="Item Name" required />
+                                <input type="number" step="0.01" name="price" placeholder="Price" required />
+                                <input type="text" name="secName" placeholder="Section" required />
                             </div>
                             <div style={{ flexGrow: "1" }}>
-                                <textarea placeholder="Item Description" required />
+                                <textarea name="iDesc" placeholder="Item Description" required />
                                 <input type="submit" value="Add New Item" />
                                 <pre>{this.state.msg}</pre>
                             </div>
