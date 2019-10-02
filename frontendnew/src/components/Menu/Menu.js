@@ -4,6 +4,7 @@ import './Menu.css';
 class Menu extends Component {
     constructor(props) {
         super(props);
+        const { match: { params: { restaurantID: restaurantId } } } = this.props;
         this.state = {
             msg: '',
             // items: {
@@ -27,7 +28,8 @@ class Menu extends Component {
             // },
             items: {},
             foodImage: "/generic-item.png",
-            imageTargetFile: ''
+            imageTargetFile: '',
+            restaurantId
         }
     }
 
@@ -35,7 +37,7 @@ class Menu extends Component {
         const sleep = msec => new Promise(r => setTimeout(r, msec));
         try {
             this.props.toggleSpinner("Fetching....");
-            const response = await fetch('/api/v1/restaurant/item');
+            const response = await fetch(`/api/v1/restaurant/item${this.state.restaurantId ? `?restaurantId=${this.state.restaurantId}` : ''}`);
             const body = await response.json();
             await sleep(1500);
             this.props.toggleSpinner();
@@ -119,14 +121,17 @@ class Menu extends Component {
                     <div className="container">
                         {Object.keys(this.state.items).map(section => (
                             <div key={section}>
-                                <div className="contact-form" style={{ width: "80%", display: "flex" }}>
+                                {!this.state.restaurantId ? (<div className="contact-form" style={{ width: "80%", display: "flex" }}>
                                     <label>Section:</label>
                                     <form onSubmit={this.changeSectionName(section).bind(this)} style={{ width: "80%", display: "flex" }}>
                                         <input style={{ width: "150vw", marginRight: "3vw" }} name="sectionName" defaultValue={section} type="text" placeholder="Section Name" required />
                                         <input style={{ marginRight: "2vw", height: "58px" }} type="submit" value="Change Name" />
                                     </form>
                                     <input type="button" onClick={() => this.deleteSection(section)} value="Delete Section" />
-                                </div>
+                                </div>) :
+                                    (<div className="contact-form">
+                                        <pre style={{ textAlign: "center" }}>{section}</pre>
+                                    </div>)}
                                 <div className="recipes-list">
                                     {this.state.items[section].map(item => (
                                         <article className="recipe" key={item.itemID}>
@@ -136,7 +141,7 @@ class Menu extends Component {
                                                 <p>{item.iDesc}</p>
                                                 <p>{item.secName}</p>
                                                 <div className="recipe-meta">
-                                                    <span className="time"><img src="images/dollar.png" />{item.price}</span>
+                                                    <span className="time"><img src="/images/dollar.png" />{item.price}</span>
                                                 </div>
                                             </div>
                                         </article>
@@ -144,9 +149,9 @@ class Menu extends Component {
                                 </div>
                             </div>
                         ))}
-                        <hr />
+                        {!this.state.restaurantId && <hr />}
                     </div>)}
-                < div className="contact-form" style={{ width: "60%" }} >
+                {!this.state.restaurantId && (< div className="contact-form" style={{ width: "60%" }} >
                     <form onSubmit={this.addItem.bind(this)} >
                         <div style={{ width: "20%", height: "auto", margin: "0 auto" }}>
                             <img style={{ imageOrientation: "from-image", width: "13vw", height: "auto", position: "relative" }} src={this.state.foodImage}></img>
@@ -165,7 +170,7 @@ class Menu extends Component {
                             </div>
                         </div>
                     </form>
-                </div >
+                </div >)}
             </div>
         );
     }

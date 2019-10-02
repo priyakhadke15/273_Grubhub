@@ -56,7 +56,7 @@ router.get('/item', async function (req, res, next) {
         }
         const { results } = await getRestaurants(restaurant);
         if (results.length == 0) {
-            return res.json({});
+            return res.json([]);
         }
         else {
             rest = results[0];

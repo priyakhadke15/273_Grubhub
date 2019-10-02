@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { login, logout } from '../actions';
 
 class SiteDescription extends Component {
@@ -85,7 +86,7 @@ class SiteDescription extends Component {
                                     <article className="recipe" key={item.itemID}>
                                         <figure className="recipe-image"><img src={item.iImage && item.iImage !== "undefined" ? item.iImage : "/generic-item.png"} alt={item.itemName} /></figure>
                                         <div className="recipe-detail">
-                                            <h2 className="recipe-title"><a href="#">{item.name}</a></h2>
+                                            <h2 className="recipe-title"><Link to={`/restaurant/${item.restaurantId}`}>{item.name}</Link></h2>
                                             <pre>{item.cuisine}</pre>
                                             <h4>{item.itemName}</h4>
                                             <p>{item.iDesc}</p>
