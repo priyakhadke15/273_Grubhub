@@ -130,7 +130,7 @@ class Menu extends Component {
                                     <input type="button" onClick={() => this.deleteSection(section)} value="Delete Section" />
                                 </div>) :
                                     (<div className="contact-form">
-                                        <pre style={{ textAlign: "center" }}>{section}</pre>
+                                        <pre style={{ textAlign: "center", fontWeight: "bold", fontSize: "20px" }}>{section}</pre>
                                     </div>)}
                                 <div className="recipes-list">
                                     {this.state.items[section].map(item => (
