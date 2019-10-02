@@ -5,7 +5,8 @@ class PastOrderPage extends Component {
         super(props);
         this.state = {
             msg: '',
-            orders: []
+            orders: [],
+            persons: []
         }
     }
     async componentDidMount() {
@@ -25,10 +26,18 @@ class PastOrderPage extends Component {
             await sleep(1000);
             this.props.toggleSpinner()
             if (response.status === 200) {
-                this.setState({
-                    msg: '',
-                    orders: res
-                });
+                if (res.orders.length > 0) {
+                    this.setState({
+                        msg: '',
+                        orders: res.orders,
+                        persons: res.persons
+                    });
+                }
+                else {
+                    this.setState({
+                        msg: 'No Order History for you'
+                    });
+                }
             } else if (response.status === 401) {
                 this.setState({ msg: 'please login to continue...' });
             }
@@ -40,16 +49,17 @@ class PastOrderPage extends Component {
         }
     }
     render() {
-        let d = '';
         return (
             <div>
                 <div className="container">
                     <div className="recipes-list">
+                        <pre>{this.state.msg}</pre>
                         {this.state.orders.map(order => (
                             <article className="recipe" key={order.orderID}>
-                                <figure className="recipe-image" style={{ width: "140px", height: "140px" }}><img style={{ width: "140px", height: "140px" }} src={order.image && order.image !== "undefined" ? order.image : "/generic-item.png"} alt={order.orderID} /></figure>
+                                <figure className="recipe-image"><img src={order.image && order.image !== "undefined" ? order.image : "/generic-item.png"} alt={order.orderID} /></figure>
                                 <div className="recipe-detail">
-                                    <h2 className="recipe-title"><a href="#">{order.name}</a></h2>
+                                    {this.state.persons.length && <h2 className="recipe-title"><a href="#">{this.state.persons[0].firstName} {this.state.persons[0].lastName}</a></h2>}
+                                    {this.state.orders.length && <h2 className="recipe-title"><a href="#">{order.name} </a></h2>}
                                     <h4>{order.itemName}</h4>
                                     <span><img src="/images/icon-map-marker-alt.png" />{order.deliveryAdd}</span>
                                     <div className="recipe-meta">

@@ -8,9 +8,10 @@ const { getOrders, saveOrder, editOrder } = require('../DAL');
 const { getOrderDetails, saveOrderDetails } = require('../DAL');
 const { getItems } = require('../DAL');
 const { getRestaurants } = require('../DAL');
-// get the buyers order list for past orders and upcoming orders  etc
+const { getPersons } = require('../DAL');
+// get the order list for past orders and upcoming orders  etc
 router.get('/', async function (req, res, next) {
-
+    let order = '', Restresult = '', person = '';
     const { orderID, restaurantId, orderDate, deliveryAdd, status, price } = req.query;
     //check if user is logged in
     if (!(req.cookies.authCookie)) {
@@ -19,12 +20,39 @@ router.get('/', async function (req, res, next) {
     }
     try {
         const user = jwt.verify(req.cookies.authCookie, jwtsecret);
-        const order = {
-            buyerId: user.id,
-            orderID, restaurantId, orderDate, deliveryAdd, status, price
-        };
-        const { results } = await getOrders(order);
-        res.json(results);
+        if (user.isSeller) {
+            const { results } = await getRestaurants({ ownerId: user.id });
+            if (results.length == 0) { return res.send({}); }
+            else {
+                Restresult = JSON.parse(JSON.stringify(results[0]))
+                order = {
+                    restaurantId: Restresult.restaurantId,
+                    orderID, orderDate, deliveryAdd, status, price
+                };
+            }
+        }
+        else {
+            order = {
+                buyerId: user.id,
+                orderID, restaurantId, orderDate, deliveryAdd, status, price
+            };
+        }
+        const { results: queryResult } = await getOrders(order);
+        if (user.isSeller) {
+            if (queryResult.length == 0) { return res.send({ orders: [], persons: [] }); }
+            Restresult = JSON.parse(JSON.stringify(queryResult[0]))
+            person = {
+                id: Restresult.buyerId
+            }
+            const { results: personResult } = await getPersons(person);
+            orderResults = { orders: queryResult, persons: personResult };
+
+        }
+        else {
+            orderResults = { orders: queryResult, persons: [] };
+        }
+
+        return res.json(orderResults);
     }
     catch (e) {
         res.status(500).json({ message: e.message });

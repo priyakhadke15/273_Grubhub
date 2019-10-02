@@ -6,25 +6,31 @@ const getOrders = connection => order => {
 
     const clause = [];
     if (orderID) {
-        clause.push(`orderID='${orderID}'`);
+        clause.push(`${_tableName}.orderID='${orderID}'`);
     }
     if (restaurantId) {
-        clause.push(`restaurantId='${restaurantId}'`);
+        clause.push(`${_tableName}.restaurantId='${restaurantId}'`);
     }
     if (buyerId) {
-        clause.push(`buyerId='${buyerId}'`);
+        clause.push(`${_tableName}.buyerId='${buyerId}'`);
     }
     if (orderDate) {
-        clause.push(`orderDate='${orderDate}'`);
+        clause.push(`${_tableName}.orderDate='${orderDate}'`);
     }
     if (deliveryAdd) {
-        clause.push(`deliveryAdd like '%${deliveryAdd}%'`);
+        clause.push(`${_tableName}.deliveryAdd like '%${deliveryAdd}%'`);
     }
     if (status) {
-        clause.push(`status='${status}'`);
+        if (status == 'new') {
+            clause.push(`${_tableName}.status IN ('new','preparing','ready')`);
+        }
+        else {
+            clause.push(`${_tableName}.status='${status}'`);
+        }
+
     }
     if (price) {
-        clause.push(`price<='${price}'`);
+        clause.push(`${_tableName}.price<='${price}'`);
     }
     query += clause.length > 0 ? ` where ${clause.join(' and ')}` : ''
     return new Promise((resolve, reject) => {
