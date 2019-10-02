@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './Menu.css';
+import { connect } from 'react-redux';
+import { login, logout } from '../../actions';
 
 class Menu extends Component {
     constructor(props) {
@@ -121,14 +123,15 @@ class Menu extends Component {
                     <div className="container">
                         {Object.keys(this.state.items).map(section => (
                             <div key={section}>
-                                {!this.state.restaurantId ? (<div className="contact-form" style={{ width: "80%", display: "flex" }}>
-                                    <label>Section:</label>
-                                    <form onSubmit={this.changeSectionName(section).bind(this)} style={{ width: "80%", display: "flex" }}>
-                                        <input style={{ width: "150vw", marginRight: "3vw" }} name="sectionName" defaultValue={section} type="text" placeholder="Section Name" required />
-                                        <input style={{ marginRight: "2vw", height: "58px" }} type="submit" value="Change Name" />
-                                    </form>
-                                    <input type="button" onClick={() => this.deleteSection(section)} value="Delete Section" />
-                                </div>) :
+                                {!this.state.restaurantId ?
+                                    (<div className="contact-form" style={{ width: "80%", display: "flex" }}>
+                                        <label>Section:</label>
+                                        <form onSubmit={this.changeSectionName(section).bind(this)} style={{ width: "80%", display: "flex" }}>
+                                            <input style={{ width: "150vw", marginRight: "3vw" }} name="sectionName" defaultValue={section} type="text" placeholder="Section Name" required />
+                                            <input style={{ marginRight: "2vw", height: "58px" }} type="submit" value="Change Name" />
+                                        </form>
+                                        <input type="button" onClick={() => this.deleteSection(section)} value="Delete Section" />
+                                    </div>) :
                                     (<div className="contact-form">
                                         <pre style={{ textAlign: "center", fontWeight: "bold", fontSize: "20px" }}>{section}</pre>
                                     </div>)}
@@ -136,13 +139,18 @@ class Menu extends Component {
                                     {this.state.items[section].map(item => (
                                         <article className="recipe" key={item.itemID}>
                                             <figure className="recipe-image" style={{ width: "170px", height: "170px" }}><img style={{ width: "170px", height: "170px" }} src={item.iImage && item.iImage !== "undefined" ? item.iImage : "/generic-item.png"} alt={item.itemName} /></figure>
-                                            <div className="recipe-detail">
-                                                <h2 className="recipe-title"><a href="#">{item.itemName}</a></h2>
-                                                <p>{item.iDesc}</p>
-                                                <p>{item.secName}</p>
-                                                <div className="recipe-meta">
-                                                    <span className="time"><img src="/images/dollar.png" />{item.price}</span>
+                                            <div className="recipe-detail" style={{ display: "table" }}>
+                                                <div style={{ display: "table-cell", width: "45vw" }}>
+                                                    <h2 className="recipe-title"><a href="#">{item.itemName}</a></h2>
+                                                    <p>{item.iDesc}</p>
+                                                    <p>{item.secName}</p>
+                                                    <div className="recipe-meta">
+                                                        <span className="time"><img src="/images/dollar.png" />{item.price}</span>
+                                                    </div>
                                                 </div>
+                                                {this.props.isLoggedIn && !this.props.isSeller && <div style={{ width: "20%", marginRight: "50px", display: "table-cell", height: "auto" }}>
+                                                    <input type="button" value="Add to cart" style={{ backgroundColor: "#f16a54", color: "white", position: "relative", top: "110px" }} />
+                                                </div>}
                                             </div>
                                         </article>
                                     ))}
@@ -176,4 +184,17 @@ class Menu extends Component {
     }
 }
 
-export default Menu;
+const mapStateToProps = state => ({
+    isLoggedIn: state.userdata.isLoggedIn,
+    isSeller: state.userdata.isSeller,
+    // signupEmail: state.userdata.signupEmail,
+    // userId: state.userdata.id,
+    // email: state.userdata.email
+});
+
+const mapDispatchToProps = dispatch => ({
+    login: () => dispatch(login()),
+    logout: () => dispatch(logout())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);
