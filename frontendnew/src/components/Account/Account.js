@@ -30,7 +30,10 @@ class Account extends Component {
                             path="/account/restaurant"
                             render={props => <Restaurant {...props} toggleSpinner={this.props.toggleSpinner.bind(this)} />}
                         />
-                        <Route path="/account/pastorders" component={PastOrderPage} />
+                        <Route
+                            path="/account/pastorders"
+                            render={props => <PastOrderPage {...props} toggleSpinner={this.props.toggleSpinner.bind(this)} />}
+                        />
                         <Route path="/account/upcomingorders" component={UpcomingOrderPage} />
                     </div>
                 </div>

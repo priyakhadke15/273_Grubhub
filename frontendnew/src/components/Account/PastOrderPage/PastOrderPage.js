@@ -11,6 +11,7 @@ class PastOrderPage extends Component {
     async componentDidMount() {
         const sleep = msec => new Promise(r => setTimeout(r, msec));
         try {
+            this.props.toggleSpinner("Fetching...");
             const response = await fetch('/api/v1/order?status=delivered', {
                 method: 'get',
                 mode: "cors",
@@ -22,6 +23,7 @@ class PastOrderPage extends Component {
             const res = await response.json();
             console.log(res);
             await sleep(1000);
+            this.props.toggleSpinner()
             if (response.status === 200) {
                 this.setState({
                     msg: '',
@@ -33,6 +35,7 @@ class PastOrderPage extends Component {
         }
         catch (e) {
             await sleep(1000);
+            this.props.toggleSpinner();
             this.setState({ msg: e.message || e });
         }
     }
@@ -44,7 +47,7 @@ class PastOrderPage extends Component {
                     <div className="recipes-list">
                         {this.state.orders.map(order => (
                             <article className="recipe" key={order.orderID}>
-                                <figure className="recipe-image"><img src={order.image && order.image !== "undefined" ? order.image : "/generic-item.png"} alt={order.orderID} /></figure>
+                                <figure className="recipe-image" style={{ width: "140px", height: "140px" }}><img style={{ width: "140px", height: "140px" }} src={order.image && order.image !== "undefined" ? order.image : "/generic-item.png"} alt={order.orderID} /></figure>
                                 <div className="recipe-detail">
                                     <h2 className="recipe-title"><a href="#">{order.name}</a></h2>
                                     <h4>{order.itemName}</h4>
