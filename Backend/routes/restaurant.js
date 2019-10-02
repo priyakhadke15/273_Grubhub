@@ -31,33 +31,43 @@ router.put('/', async function (req, res, next) {
         res.status(500).json({ message: e.message });
     }
 });
+
 // get the item list for one restaurant
 router.get('/item', async function (req, res, next) {
-    let item;
+    let item, rest;
+    const { restaurantId } = req.query;
     if (!(req.cookies.authCookie)) {
         console.error("Unauthorised access");
         return res.status(401).json({ message: "please login to continue" });
     }
     try {
         const user = jwt.verify(req.cookies.authCookie, jwtsecret);
-        if (!user.isSeller) {
-            console.error("Unauthorised access");
-            return res.status(401).json({ message: "please login to continue" });
+        //if buyer is requesting item list
+        if (!user.isSeller && restaurantId) {
+            restaurant = {
+                restaurantId
+            }
         }
-        //restaurant object to get the rest ID
-        restaurant = {
-            ownerId: user.id
+        else {
+            //restaurant object to get the rest ID
+            restaurant = {
+                ownerId: user.id
+            }
         }
         const { results } = await getRestaurants(restaurant);
-        if (results.length == 1) {
+        if (results.length == 0) {
+            return res.json({});
+        }
+        else {
             rest = results[0];
+            //Object for item to search
+            item = {
+                restaurantId: rest.restaurantId
+            }
+            const { results: queryresult } = await getItems(item);
+            return res.json(queryresult);
         }
-        //Object for item to search
-        item = {
-            restaurantId: rest.restaurantId
-        }
-        const { results: queryresult } = await getItems(item);
-        res.json(queryresult);
+
     }
     catch (e) {
         res.status(500).json({ message: e.message });
