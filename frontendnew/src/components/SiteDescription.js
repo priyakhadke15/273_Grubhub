@@ -9,21 +9,6 @@ class SiteDescription extends Component {
         super(props);
         this.state = {
             msg: '',
-            // item: {
-            //     address: "N Street,San Jose",
-            //     cuisine: "bakery",
-            //     iDesc: "Rice Bowl with veggies",
-            //     iImage: "undefined",
-            //     image: "",
-            //     itemID: "6a54fdcc-2b15-4649-a20d-c47450ae7fa8",
-            //     itemName: "Rice Bowl",
-            //     name: "CafeCool",
-            //     ownerId: "80a38bca-e310-4f3d-a48b-48a55688108c",
-            //     price: 7.65,
-            //     restaurantId: "cdf5b752-4b43-4457-adf6-81d83835bf65",
-            //     secName: "dinner",
-            //     zipcode: 95113
-            // }
             items: []
         };
         this.searchRef = React.createRef();

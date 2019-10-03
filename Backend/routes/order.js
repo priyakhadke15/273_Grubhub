@@ -176,8 +176,8 @@ router.put('/', async function (req, res, next) {
         order = {
             orderID, status
         };
-        const { results: queryResult } = await editOrder(order);
-        res.json(queryResult);
+        await editOrder(order);
+        res.json({ message: "Details updated" });
     }
     catch (e) {
         res.status(500).json({ message: e.message });
