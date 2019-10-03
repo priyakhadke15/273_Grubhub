@@ -7,7 +7,7 @@ import Signup from './Signup/Signup';
 import Login from './Login/Login';
 import Menu from './Menu/Menu';
 import Account from './Account/Account';
-import Restaurant from './Account/Restaurant/Restaurant';
+import Cart from './Cart/Cart';
 import Search from './Search/Search';
 import { Route } from 'react-router-dom';
 import LoadingOverlay from 'react-loading-overlay';
@@ -61,6 +61,11 @@ class Main extends Component {
                             path="/search"
                             render={props => <Search {...props} toggleSpinner={this.toggleSpinner.bind(this)} />}
                         />
+                        <Route
+                            path="/cart"
+                            render={props => <Cart {...props} toggleSpinner={this.toggleSpinner.bind(this)} />}
+                        />
+
                         <Route path="/home" component={Home} />
                     </div>
                     <SiteFooter />

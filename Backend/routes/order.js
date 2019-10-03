@@ -89,7 +89,8 @@ router.post('/', async function (req, res, next) {
     var total = 0, ordertotal = 0;
     var randNum = uuidv4();
     const { items, restaurantId, deliveryAdd } = req.body;
-    const itemjson = JSON.parse(items);
+    // const itemjson = JSON.parse(items);
+    const itemjson = items;
 
     try {
         //check if user is logged in
@@ -133,12 +134,13 @@ router.post('/', async function (req, res, next) {
             await saveOrderDetails(orderdetail);
             ordertotal += total;
         }
+
         const order = {
             orderID: randNum,
             buyerId: user.id,   //buyer's userid is fetched from authcookie
             orderDate: (curr_year + '-' + curr_month + '-' + curr_date + ' ' + hour + ':' + minutes + ':' + seconds),
             status: 'new',
-            price: ordertotal,
+            price: Math.round(ordertotal * 100) / 100,
             restaurantId, deliveryAdd
         };
         const { results: queryResult } = await saveOrder(order);
