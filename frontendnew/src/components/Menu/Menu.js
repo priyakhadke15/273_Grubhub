@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Menu.css';
 import { connect } from 'react-redux';
-import { login, logout } from '../../actions';
+import { login, logout, getCart, setCart } from '../../actions';
 
 class Menu extends Component {
     constructor(props) {
@@ -59,7 +59,7 @@ class Menu extends Component {
         }
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         this.repaintMenu();
     }
 
@@ -168,6 +168,26 @@ class Menu extends Component {
         }
     }
 
+    async addToCart(restaurantId, item) {
+        const sleep = msec => new Promise(r => setTimeout(r, msec));
+        const cart = this.props.cartdata && Object.keys(this.props.cartdata).length > 0 ? { ...this.props.cartdata } : {};
+        if (cart.userId === this.props.userId && cart.restaurantId !== restaurantId) {
+            return alert('you can add items from only one restaurant to the cart!');
+        }
+
+        this.props.toggleSpinner("Adding...");
+        cart.userId = this.props.userId;
+        cart.restaurantId = restaurantId;
+        cart.items = Array.isArray(cart.items) ? cart.items : [];
+        // push to cart only if this item does not already exist
+        if (!cart.items.find(i => i.itemID === item.itemID)) {
+            cart.items.push({ ...item, quantity: 1 });
+            this.props.setCart(cart);
+        }
+        await sleep(1000);
+        this.props.toggleSpinner();
+    }
+
     render() {
         return (
             <div>
@@ -200,9 +220,10 @@ class Menu extends Component {
                                                         <span className="time"><img src="/images/dollar.png" />{item.price}</span>
                                                     </div>
                                                 </div>
-                                                {this.props.isLoggedIn && !this.props.isSeller && <div style={{ width: "20%", marginRight: "50px", display: "table-cell", height: "auto" }}>
-                                                    <input type="button" value="Add to cart" style={{ backgroundColor: "#f16a54", color: "white", position: "relative", top: "110px" }} />
-                                                </div>}
+                                                {this.props.isLoggedIn && !this.props.isSeller &&
+                                                    (<div style={{ width: "20%", marginRight: "50px", display: "table-cell", height: "auto" }}>
+                                                        <input type="button" onClick={() => this.addToCart(item.restaurantId, item)} value="Add to cart" style={{ backgroundColor: "#f16a54", color: "white", position: "relative", top: "110px" }} />
+                                                    </div>)}
                                             </div>
                                         </article>
                                     ))}
@@ -239,14 +260,17 @@ class Menu extends Component {
 const mapStateToProps = state => ({
     isLoggedIn: state.userdata.isLoggedIn,
     isSeller: state.userdata.isSeller,
+    userId: state.userdata.id,
+    cartdata: state.cartdata,
     // signupEmail: state.userdata.signupEmail,
-    // userId: state.userdata.id,
     // email: state.userdata.email
 });
 
 const mapDispatchToProps = dispatch => ({
     login: () => dispatch(login()),
-    logout: () => dispatch(logout())
+    logout: () => dispatch(logout()),
+    getCart: () => dispatch(getCart()),
+    setCart: cart => dispatch(setCart(cart))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Menu);
