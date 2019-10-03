@@ -61,7 +61,7 @@ router.get('/', async function (req, res, next) {
 //get orderdetails for detailed view
 router.get('/details', async function (req, res, next) {
 
-    const { orderID } = req.body;
+    const { orderID } = req.query;
     //check if user is logged in
     if (!(req.cookies.authCookie)) {
         console.error("Unauthorised access");

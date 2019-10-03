@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class UpcomingOrderPage extends Component {
     constructor(props) {
@@ -12,6 +13,7 @@ class UpcomingOrderPage extends Component {
     async componentDidMount() {
         const sleep = msec => new Promise(r => setTimeout(r, msec));
         try {
+            this.props.toggleSpinner('Loading...');
             const response = await fetch('/api/v1/order?status=new', {
                 method: 'get',
                 mode: "cors",
@@ -23,6 +25,7 @@ class UpcomingOrderPage extends Component {
             const res = await response.json();
             console.log(res);
             await sleep(1000);
+            this.props.toggleSpinner();
             if (response.status === 200) {
                 if (res.orders.length > 0) {
                     this.setState({
@@ -42,6 +45,7 @@ class UpcomingOrderPage extends Component {
         }
         catch (e) {
             await sleep(1000);
+            this.props.toggleSpinner();
             this.setState({ msg: e.message || e });
         }
     }
@@ -55,15 +59,20 @@ class UpcomingOrderPage extends Component {
                             <article className="recipe" key={order.orderID}>
                                 <figure className="recipe-image"><img src={order.image && order.image !== "undefined" ? order.image : "/generic-item.png"} alt={order.orderID} /></figure>
                                 <div className="recipe-detail">
-                                    {this.state.persons.length && <h2 className="recipe-title"><a href="#">{this.state.persons[0].firstName} {this.state.persons[0].lastName}</a></h2>}
-                                    {this.state.orders.length && <h2 className="recipe-title"><a href="#">{order.name} </a></h2>}
+                                    {this.state.persons.length > 0 && <h2 className="recipe-title">
+                                        <Link to={`/order/details/${order.orderID}`}>{this.state.persons[0].firstName} {this.state.persons[0].lastName}</Link></h2>
+                                    }
+                                    {this.state.orders.length > 0 && <h2 className="recipe-title"><Link to={`/order/details/${order.orderID}`}>{order.name} </Link></h2>}
                                     <h4>{order.itemName}</h4>
                                     <span><img src="/images/icon-map-marker-alt.png" />{order.deliveryAdd}</span>
                                     <div className="recipe-meta">
                                         <span className="time"><img src="/images/icon-time.png" />{new Date(order.orderDate).toLocaleDateString()} {new Date(order.orderDate).toLocaleTimeString()}</span>
                                         <span className="time"><img src="/images/dollar.png" />{order.price}</span>
+                                        <span className="time"><img src="/images/icon-pie-chart.png" />{order.status}</span>
                                     </div>
+
                                 </div>
+
                             </article>
                         ))}
                     </div>

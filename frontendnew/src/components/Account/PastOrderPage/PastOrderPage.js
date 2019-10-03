@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class PastOrderPage extends Component {
     constructor(props) {
@@ -58,8 +59,8 @@ class PastOrderPage extends Component {
                             <article className="recipe" key={order.orderID}>
                                 <figure className="recipe-image"><img src={order.image && order.image !== "undefined" ? order.image : "/generic-item.png"} alt={order.orderID} /></figure>
                                 <div className="recipe-detail">
-                                    {this.state.persons.length && <h2 className="recipe-title"><a href="#">{this.state.persons[0].firstName} {this.state.persons[0].lastName}</a></h2>}
-                                    {this.state.orders.length && <h2 className="recipe-title"><a href="#">{order.name} </a></h2>}
+                                    {this.state.persons.length > 0 && <h2 className="recipe-title"><Link to={`/order/details/${order.orderID}`}>{this.state.persons[0].firstName} {this.state.persons[0].lastName}</Link></h2>}
+                                    {this.state.orders.length > 0 && <h2 className="recipe-title"><Link to={`/order/details/${order.orderID}`}>{order.name} </Link></h2>}
                                     <h4>{order.itemName}</h4>
                                     <span><img src="/images/icon-map-marker-alt.png" />{order.deliveryAdd}</span>
                                     <div className="recipe-meta">

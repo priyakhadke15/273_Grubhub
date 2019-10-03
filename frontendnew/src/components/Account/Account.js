@@ -7,6 +7,7 @@ import Profile from './Profile/Profile';
 import Restaurant from './Restaurant/Restaurant';
 import './Account.css';
 import { login, logout } from '../../actions';
+import OrderDetail from './OrderDetail/OrderDetail'
 
 class Account extends Component {
     render() {
@@ -34,7 +35,13 @@ class Account extends Component {
                             path="/account/pastorders"
                             render={props => <PastOrderPage {...props} toggleSpinner={this.props.toggleSpinner.bind(this)} />}
                         />
-                        <Route path="/account/upcomingorders" component={UpcomingOrderPage} />
+                        <Route path="/account/upcomingorders"
+                            render={props => <UpcomingOrderPage {...props} toggleSpinner={this.props.toggleSpinner.bind(this)} />}
+                        />
+                        <Route
+                            path="/order/details/:orderID"
+                            render={props => <OrderDetail {...props} toggleSpinner={this.props.toggleSpinner.bind(this)} />}
+                        />
                     </div>
                 </div>
             </Router>
