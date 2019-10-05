@@ -13,7 +13,7 @@ const { getItems, saveItem, editItem, delItem } = require('../DAL')
 // get the item list for searching
 router.get('/', async function (req, res, next) {
     let item;
-    const { itemName, iDesc, price, secName } = req.query;
+    const { itemName, iDesc, price, secName, itemID } = req.query;
     if (!(req.cookies.authCookie)) {
         console.error("Unauthorised access");
         return res.status(401).json({ message: "please login to continue" });
@@ -21,7 +21,7 @@ router.get('/', async function (req, res, next) {
     try {
         //Object for item to search
         item = {
-            itemName, iDesc, price, secName
+            itemName, iDesc, price, secName, itemID
         }
         const { results } = await getItems(item);
         res.json(results);
@@ -66,9 +66,10 @@ router.post('/', upload.single('itemImage'), async function (req, res, next) {
     }
 });
 // edit item 
-router.put('/', async function (req, res, next) {
+router.put('/', upload.single('itemImage'), async function (req, res, next) {
     let rest;
-    const { itemID, itemName, iDesc, price, iImage, secName } = req.body;
+    const { itemID, itemName, iDesc, price, secName } = req.body;
+    const iImage = req.file ? `/${req.file.filename}` : '';
     if (!(req.cookies.authCookie)) {
         console.error("Unauthorised access");
         return res.status(401).json({ message: "please login to continue" });
@@ -79,10 +80,7 @@ router.put('/', async function (req, res, next) {
             console.error("Unauthorised access");
             return res.status(401).json({ message: "please login to continue" });
         }
-        const item = {
-            itemID,
-            itemName, iDesc, price, iImage, secName
-        }
+        const item = { itemID, itemName, iDesc, price, iImage, secName }
         await editItem(item);
         res.json({ message: "Details updated" });
     }

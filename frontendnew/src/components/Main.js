@@ -6,6 +6,7 @@ import Home from './LandingPage/Home';
 import Signup from './Signup/Signup';
 import Login from './Login/Login';
 import Menu from './Menu/Menu';
+import Item from './Item/Item';
 import Account from './Account/Account';
 import Cart from './Cart/Cart';
 import Search from './Search/Search';
@@ -52,6 +53,10 @@ class Main extends Component {
                         <Route
                             path="/restaurant/:restaurantID"
                             render={props => <Menu {...props} toggleSpinner={this.toggleSpinner.bind(this)} />}
+                        />
+                        <Route
+                            path="/item/:itemID"
+                            render={props => <Item {...props} toggleSpinner={this.toggleSpinner.bind(this)} />}
                         />
                         <Route
                             path="/account"

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Menu.css';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { login, logout, getCart, setCart } from '../../actions';
 
 class Menu extends Component {
@@ -216,7 +217,7 @@ class Menu extends Component {
                                             <figure className="recipe-image" style={{ width: "170px", height: "170px" }}><img style={{ width: "170px", height: "170px" }} src={item.iImage && item.iImage !== "undefined" ? item.iImage : "/generic-item.png"} alt={item.itemName} /></figure>
                                             <div className="recipe-detail" style={{ display: "table" }}>
                                                 <div style={{ display: "table-cell", width: "45vw" }}>
-                                                    <h2 className="recipe-title"><a href="#">{item.itemName}</a></h2>
+                                                    <h2 className="recipe-title"><Link to={`/item/${item.itemID}`}>{item.itemName}</Link></h2>
                                                     <p>{item.iDesc}</p>
                                                     <p>{item.secName}</p>
                                                     <div className="recipe-meta">

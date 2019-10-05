@@ -68,7 +68,9 @@ const editItem = connection => item => {
     if (price) {
         clause.push(`price='${price}'`);
     }
-
+    if (iImage) {
+        clause.push(`iImage='${iImage}'`);
+    }
     if (secName) {
         clause.push(`secName='${secName}'`);
     }
