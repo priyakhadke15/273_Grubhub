@@ -179,9 +179,9 @@ class Menu extends Component {
         }
 
         this.props.toggleSpinner("Adding...");
+        cart.items = cart.userId === this.props.userId ? Array.isArray(cart.items) ? cart.items : [] : [];
         cart.userId = this.props.userId;
         cart.restaurantId = restaurantId;
-        cart.items = Array.isArray(cart.items) ? cart.items : [];
         // push to cart only if this item does not already exist
         if (!cart.items.find(i => i.itemID === item.itemID)) {
             cart.items.push({ ...item, quantity: 1 });
