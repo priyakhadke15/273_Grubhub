@@ -76,7 +76,7 @@ class SiteDescription extends Component {
                                             <h4>{item.itemName}</h4>
                                             <p>{item.iDesc}</p>
                                             <div className="recipe-meta">
-                                                <span className="time"><img src="images/icon-time.png" />40 min</span>
+                                                <span className="time"><img src="images/icon-time.png" />{Math.round(Math.random() * 20) + 20} min</span>
                                                 <span className="time"><img src="images/dollar.png" />{item.price}</span>
                                             </div>
                                         </div>
