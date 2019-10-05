@@ -3,7 +3,9 @@ var router = express.Router();
 const uuidv4 = require('uuid/v4');
 const jwt = require("jsonwebtoken");
 const { jwtsecret } = require('../config');
-
+const path = require('path');
+const multer = require('multer');
+const upload = multer({ dest: path.join(__dirname, '..', 'uploads/') });
 
 const { getRestaurants, saveRestaurant, editRestaurant } = require('../DAL')
 const { getItems, saveItem, editItem, delItem } = require('../DAL')
@@ -29,9 +31,10 @@ router.get('/', async function (req, res, next) {
     }
 });
 // add item 
-router.post('/', async function (req, res, next) {
+router.post('/', upload.single('itemImage'), async function (req, res, next) {
     let rest;
-    const { itemName, iDesc, price, iImage, secName } = req.body;
+    const { itemName, iDesc, price, secName } = req.body;
+    const iImage = req.file ? `/${req.file.filename}` : '';
     if (!(req.cookies.authCookie)) {
         console.error("Unauthorised access");
         return res.status(401).json({ message: "please login to continue" });

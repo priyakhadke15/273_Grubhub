@@ -67,20 +67,23 @@ class Menu extends Component {
         e.preventDefault();
         const { itemName, iDesc, price, secName } = e.target.elements;
         try {
+            const data = {
+                itemName: itemName.value,
+                iDesc: iDesc.value,
+                price: price.value,
+                secName: secName.value
+            };
+            const dataform = new FormData();
+            for (const key in data) {
+                dataform.append(key, data[key]);
+            }
+            this.state.imageTargetFile && dataform.append('itemImage', this.state.imageTargetFile);
             this.props.toggleSpinner("Adding...");
             const response = await fetch('/api/v1/item', {
                 method: 'POST',
                 mode: "cors",
                 redirect: 'follow',
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify({
-                    itemName: itemName.value,
-                    iDesc: iDesc.value,
-                    price: price.value,
-                    secName: secName.value
-                })
+                body: dataform
             });
             this.props.toggleSpinner();
             if (response.status !== 200) {
