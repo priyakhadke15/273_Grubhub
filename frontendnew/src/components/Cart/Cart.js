@@ -5,8 +5,9 @@ import { setCart } from '../../actions';
 class Cart extends Component {
     constructor(props) {
         super(props);
-        this.deliveryAddRef = React.createRef();
-        // this.itemQuantityRef = React.createRef();
+        this.state = {
+            msg: ''
+        };
     }
 
     sleep = msec => new Promise(r => setTimeout(r, msec));
@@ -19,31 +20,51 @@ class Cart extends Component {
 
     async placeOrder(e) {
         e.preventDefault();
-        const sleep = msec => new Promise(r => setTimeout(r, msec));
-        let cart = '', userId = '', restaurantId = '', items = '';
-        cart = { userId, restaurantId, items } = JSON.parse(localStorage.getItem('cart'));
-        fetch(`/api/v1/order`, {
-            method: 'post',
-            mode: "cors",
-            redirect: 'follow',
-            headers: new Headers({ 'content-type': 'application/json' }),
-            body: JSON.stringify({ items, restaurantId, deliveryAdd: this.deliveryAddRef.current.value })
-        }).then(async (response) => {
+        const { restaurantId, items } = this.props.cartdata;
+        if (!restaurantId || !Array.isArray(items) || items.length === 0) {
+            return alert("your cart is empty!");
+        }
+        const deliveryAdd = e.target.elements.address.value;
+        try {
+            this.props.toggleSpinner("Placing order...");
+            const response = await fetch(`/api/v1/order`, {
+                method: 'post',
+                mode: "cors",
+                redirect: 'follow',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({ items, restaurantId, deliveryAdd })
+            });
             const body = await response.json();
-            await sleep(1000);
+            await this.sleep(2000);
             this.props.toggleSpinner();
             if (response.status === 200) {
-                await sleep(500);
+                this.props.setCart({});
                 this.setState({ msg: "Order Placed" })
             } else {
                 this.setState({ msg: body.message });
             }
-        }).catch(async err => {
-            await sleep(2000);
+        } catch (err) {
+            await this.sleep(2000);
             this.props.toggleSpinner();
-            this.setState({ msg: err.message || err })
-        });
+            this.setState({ msg: err.message || err });
+        }
 
+    }
+
+    changeQuantity = itemId => async e => {
+        const items = [...this.props.cartdata.items];
+        const index = items.findIndex(e => e.itemID === itemId);
+        if (index > -1) {
+            items[index].quantity = Math.round(e.target.value);
+            this.props.toggleSpinner("Updating...");
+            await this.sleep(500);
+            this.props.setCart({
+                restaurantId: this.props.cartdata.restaurantId,
+                userId: this.props.cartdata.userId,
+                items
+            });
+            this.props.toggleSpinner();
+        }
     }
 
     async removeItem(itemId) {
@@ -82,7 +103,7 @@ class Cart extends Component {
                                         <span className="time"><img src="/images/dollar.png" />{item.price}</span>
                                         <span className="time" style={{ color: "#898670", fontSize: "14px", margin: "0 auto", marginRight: "400px" }}>
                                             <img src="/images/icon-pie-chart.png" />
-                                            <input style={{ width: "100px" }} type="number" min="1" placeholder="1" />
+                                            <input style={{ width: "100px" }} type="number" onChange={this.changeQuantity(item.itemID)} min="1" defaultValue={item.quantity} />
                                         </span>
                                         <span className="contact-form" >
                                             <input type="button" onClick={() => this.removeItem(item.itemID)} value="Remove Item" style={{ marginTop: "5px" }} />
@@ -93,9 +114,10 @@ class Cart extends Component {
                         ))}
                         <div className="contact-form" >
                             <form onSubmit={this.placeOrder.bind(this)}>
-                                <input type="text" ref={this.deliveryAddRef} placeholder="Delivery Address" required autoFocus style={{ width: "50%" }} />
+                                <input type="text" name="address" placeholder="Delivery Address" required autoFocus style={{ width: "50%" }} />
                                 <input type="submit" value="Place Order" style={{ marginTop: "5px" }} />
                             </form>
+                            <pre>{this.state.msg}</pre>
                         </div>
                     </div>
                 </div>
