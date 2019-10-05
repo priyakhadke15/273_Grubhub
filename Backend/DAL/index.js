@@ -1,6 +1,6 @@
 const mysql = require('mysql');
 // const faker = require('faker');
-const { sql_host, sql_port, sql_user, sql_password, sql_database } = require('../config');
+const { sql_host, sql_port, sql_user, sql_password, sql_database, sql_connectionLimit } = require('../config');
 
 const { createTables } = require('./init');
 const { getPersons, savePerson, editPerson } = require('./persons');
@@ -11,6 +11,7 @@ const { getOrderDetails, saveOrderDetails } = require('./orderdetails');
 const { editSections } = require('./items');
 
 const pool = mysql.createPool({
+    connectionLimit: sql_connectionLimit,
     host: sql_host,
     port: sql_port,
     user: sql_user,
