@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import './Item.css';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router';
 import { login, logout, getCart, setCart } from '../../actions';
 
-class Menu extends Component {
+class Item extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -32,7 +33,8 @@ class Menu extends Component {
             foodImage: "/generic-item.png",
             imageTargetFile: '',
             itemID: this.props.match.params.itemID,
-            iDesc: ''
+            iDesc: '',
+            isDeleted: false
         }
     }
 
@@ -117,7 +119,36 @@ class Menu extends Component {
         this.setState({ iDesc: e.target.value })
     }
 
+    async deleteItem() {
+        try {
+            this.props.toggleSpinner("Deleting...");
+            const response = await fetch(`/api/v1/item?itemID=${this.state.item.itemID}`, {
+                method: 'delete',
+                mode: "cors",
+                redirect: 'follow',
+                headers: {
+                    'content-type': 'application/json'
+                }
+            });
+            await this.sleep(1500);
+            this.props.toggleSpinner();
+            const body = response.json();
+            if (response.status === 200) {
+                this.setState({ isDeleted: true });
+            } else {
+                this.setState({ msg: body.message || body.msg })
+            }
+        } catch (e) {
+            await this.sleep(1000);
+            this.props.toggleSpinner();
+            this.setState({ msg: e.message || e });
+        }
+    }
+
     render() {
+        if (this.state.isDeleted) {
+            return <Redirect to="/menu" />
+        }
         return (
             <div>
                 {Object.keys(this.state.item).length > 0 && !this.props.isSeller && (
@@ -155,7 +186,7 @@ class Menu extends Component {
                                 <div style={{ flexGrow: "1" }}>
                                     <textarea name="iDesc" onChange={this.oniDescChange.bind(this)} value={this.state.iDesc} placeholder="Item Description" required />
                                     <input type="submit" value="Update" />
-                                    <input type="button" style={{ width: "150px" }} value="Delete" />
+                                    <input type="button" style={{ width: "150px" }} onClick={this.deleteItem.bind(this)} value="Delete" />
                                     <pre>{this.state.msg}</pre>
                                 </div>
                             </div>
@@ -182,4 +213,4 @@ const mapDispatchToProps = dispatch => ({
     setCart: cart => dispatch(setCart(cart))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Menu);
+export default connect(mapStateToProps, mapDispatchToProps)(Item);
