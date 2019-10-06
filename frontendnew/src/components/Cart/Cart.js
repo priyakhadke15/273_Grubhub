@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { setCart } from '../../actions';
 
 class Cart extends Component {
@@ -93,15 +94,17 @@ class Cart extends Component {
             <div>
                 <div className="container">
                     <div className="recipes-list">
+                        {Array.isArray(items) && <h1 style={{ textAlign: "center" }}><Link to={`/restaurant/${this.props.cartdata.restaurantId}`}>{items[0].name}</Link></h1>}
                         {Array.isArray(items) && items.map(item => (
                             <article className="recipe" key={item.itemID}>
                                 <figure className="recipe-image"><img src={item.iImage && item.iImage !== "undefined" ? item.iImage : "/generic-item.png"} alt={item.iImage} /></figure>
                                 <div className="recipe-detail">
-                                    <h2 className="recipe-title">{item.itemName}</h2>
+                                    <h2 className="recipe-title"><Link to={`/item/${item.itemID}`}>{item.itemName}</Link></h2>
                                     <h4>{item.iDesc}</h4>
                                     <div className="recipe-meta" >
+                                        <span className="time"><img src="/images/icon-pie-chart.png" />{Math.round(Math.random() * 200) + 120} kcal</span>
                                         <span className="time"><img src="/images/dollar.png" />{item.price}</span>
-                                        <span className="time" style={{ color: "#898670", fontSize: "14px", margin: "0 auto", marginRight: "400px" }}>
+                                        <span className="time" style={{ color: "#898670", fontSize: "14px", margin: "0 auto", marginRight: "250px" }}>
                                             <img src="/images/icon-pie-chart.png" />
                                             <input style={{ width: "100px" }} type="number" onChange={this.changeQuantity(item.itemID)} min="1" defaultValue={item.quantity} />
                                         </span>

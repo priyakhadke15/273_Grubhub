@@ -161,7 +161,7 @@ class Item extends Component {
                                 <h2 className="entry-title">{this.state.item.itemName}</h2>
                                 <div className="recipe-meta">
                                     <span className="time"><img src="/images/icon-time.png" />{Math.round(Math.random() * 20) + 20} min</span>
-                                    <span className="calorie"><img src="/images/icon-time.png" />{Math.round(Math.random() * 200) + 120} kcal</span>
+                                    <span className="calorie"><img src="/images/icon-pie-chart.png" />{Math.round(Math.random() * 200) + 120} kcal</span>
                                     <span className="time"><img src="/images/dollar.png" />{this.state.item.price}</span>
                                 </div>
                                 <pre><Link to={`/restaurant/${this.state.item.restaurantId}`}>{this.state.item.name}</Link></pre>
