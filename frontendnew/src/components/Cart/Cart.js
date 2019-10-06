@@ -7,15 +7,27 @@ class Cart extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            msg: ''
+            msg: '',
+            total: 0
         };
     }
 
     sleep = msec => new Promise(r => setTimeout(r, msec));
 
+    _setTotal(items) {
+        if (!Array.isArray(items) || items.length === 0) {
+            this.setState({ total: 0 })
+        } else {
+            this.setState({
+                total: items.reduce((acc, item) => acc + item.price * item.quantity, 0)
+            })
+        }
+    }
+
     async componentDidMount() {
         this.props.toggleSpinner("Fetching...");
         await this.sleep(1000);
+        this._setTotal(this.props.cartdata.items);
         this.props.toggleSpinner();
     }
 
@@ -59,6 +71,7 @@ class Cart extends Component {
             items[index].quantity = Math.round(e.target.value);
             this.props.toggleSpinner("Updating...");
             await this.sleep(500);
+            this._setTotal(items);
             this.props.setCart({
                 restaurantId: this.props.cartdata.restaurantId,
                 userId: this.props.cartdata.userId,
@@ -75,6 +88,7 @@ class Cart extends Component {
             items.splice(index, 1);
             this.props.toggleSpinner("Removing...");
             await this.sleep(1000);
+            this._setTotal(items);
             if (items.length === 0) {
                 this.props.setCart({});
             } else {
@@ -115,6 +129,7 @@ class Cart extends Component {
                                 </div>
                             </article>
                         ))}
+                        {Array.isArray(items) && <h1 style={{ textAlign: "center" }}>Total: {this.state.total.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</h1>}
                         <div className="contact-form" >
                             <form onSubmit={this.placeOrder.bind(this)}>
                                 <input type="text" name="address" placeholder="Delivery Address" required autoFocus style={{ width: "50%" }} />
