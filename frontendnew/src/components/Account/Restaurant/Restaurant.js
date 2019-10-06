@@ -57,7 +57,10 @@ class Restaurant extends Component {
             await sleep(1000);
             this.props.toggleSpinner();
             if (response.status === 200) {
-                this.setState({ name, address, cuisine, zipcode, profileImage });
+                this.setState({
+                    name, address, cuisine, zipcode,
+                    profileImage: profileImage && profileImage !== 'undefined' ? profileImage : '/generic-item.png'
+                });
             } else if (response.status === 401) {
                 this.setState({ msg: 'please login to continue...' });
             }
