@@ -32,7 +32,8 @@ class Menu extends Component {
             items: {},
             foodImage: "/generic-item.png",
             imageTargetFile: '',
-            restaurantId
+            restaurantId,
+            restaurantName: ''
         }
     }
 
@@ -46,6 +47,7 @@ class Menu extends Component {
             this.props.toggleSpinner();
             if (response.status === 200) {
                 this.setState({
+                    restaurantName: body[0].name,
                     items: body.reduce((acc, item) => {
                         acc[item.secName] = [...(acc[item.secName] ? acc[item.secName] : []), item]
                         return acc;
@@ -197,6 +199,7 @@ class Menu extends Component {
             <div>
                 {Object.keys(this.state.items).length > 0 && (
                     <div className="container">
+                        {!this.props.isSeller && <h1 style={{ marginTop: "30px", textAlign: "center" }}>{this.state.restaurantName}</h1>}
                         {Object.keys(this.state.items).map(section => (
                             <div key={section}>
                                 {!this.state.restaurantId ?
