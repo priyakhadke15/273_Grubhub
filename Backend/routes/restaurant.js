@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 const jwt = require("jsonwebtoken");
+const path = require("path");
+const multer = require('multer');
+const upload = multer({ dest: path.join(__dirname, '..', 'uploads/') });
 const { jwtsecret } = require('../config');
 
 const { getRestaurants, saveRestaurant, editRestaurant } = require('../DAL')
@@ -9,8 +12,9 @@ const { getOrders } = require('../DAL');
 const { editSections } = require('../DAL');
 
 // edit the owner's restaurant
-router.put('/', async function (req, res, next) {
-    const { name, image, address, cuisine, zipcode } = req.body;
+router.put('/', upload.single('image'), async function (req, res, next) {
+    const { name, address, cuisine, zipcode } = req.body;
+    const image = req.file ? `/${req.file.filename}` : '';
 
     if (!(req.cookies.authCookie)) {
         console.error("Unauthorised access");

@@ -47,7 +47,7 @@ class Menu extends Component {
             this.props.toggleSpinner();
             if (response.status === 200) {
                 this.setState({
-                    restaurantName: body[0].name,
+                    restaurantName: Array.isArray(body) && body.length > 0 ? body[0].name : '',
                     items: body.reduce((acc, item) => {
                         acc[item.secName] = [...(acc[item.secName] ? acc[item.secName] : []), item]
                         return acc;
