@@ -14,6 +14,7 @@ class OrderDetail extends Component {
     async componentDidMount() {
         const sleep = msec => new Promise(r => setTimeout(r, msec));
         try {
+            this.props.toggleSpinner("Fetching...");
             const response = await fetch(`/api/v1/order/details?orderID=${this.state.orderID}`, {
                 method: 'get',
                 mode: "cors",
@@ -23,8 +24,8 @@ class OrderDetail extends Component {
                 }
             });
             const res = await response.json();
-            console.log(res);
             await sleep(1000);
+            this.props.toggleSpinner();
             if (response.status === 200) {
                 this.setState({
                     msg: '',
@@ -36,6 +37,7 @@ class OrderDetail extends Component {
         }
         catch (e) {
             await sleep(1000);
+            this.props.toggleSpinner();
             this.setState({ msg: e.message || e });
         }
     }
