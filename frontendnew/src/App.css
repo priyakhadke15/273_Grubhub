@@ -36,7 +36,7 @@ html { background: #fff; color: #000; -webkit-text-size-adjust: 100%; -ms-text-s
 
 html, button, input, select, textarea { font-family: sans-serif; }
 
-body { margin: 0; }
+body { margin: 0; height: auto }
 
 a { background: transparent; }
 a:focus { outline: thin dotted; }
