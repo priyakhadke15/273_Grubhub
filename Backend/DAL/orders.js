@@ -23,9 +23,8 @@ const getOrders = connection => order => {
     if (status) {
         if (status == 'new') {
             clause.push(`${_tableName}.status IN ('new','preparing','ready')`);
-        }
-        else {
-            clause.push(`${_tableName}.status='${status}'`);
+        } else {
+            clause.push(`${_tableName}.status IN ('delivered','cancel')`);
         }
 
     }

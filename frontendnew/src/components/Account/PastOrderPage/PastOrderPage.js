@@ -66,6 +66,7 @@ class PastOrderPage extends Component {
                                     <div className="recipe-meta">
                                         <span className="time"><img src="/images/icon-time.png" />{new Date(order.orderDate).toLocaleDateString()} {new Date(order.orderDate).toLocaleTimeString()}</span>
                                         <span className="time"><img src="/images/dollar.png" />{order.price}</span>
+                                        <span className="time"><img src="/images/icon-time.png" />{order.status}</span>
                                     </div>
                                 </div>
                             </article>
