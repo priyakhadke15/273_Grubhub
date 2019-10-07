@@ -69,7 +69,7 @@ class Login extends Component {
     render() {
         return (
             <div>
-                {this.props.isLoggedIn ? (this.props.isSeller ? <Redirect to="/account/profile" /> : <Redirect to="/search" />) : null}
+                {this.props.isLoggedIn ? (this.props.isSeller ? <Redirect to="/account/upcomingorders" /> : <Redirect to="/search" />) : null}
                 < div className="contact-form"  >
                     <form onSubmit={this.submitLogin}>
                         <input type="email" placeholder="Email" onChange={this.usernameChangeHandler} name="username" required autoFocus />
