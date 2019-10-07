@@ -76,7 +76,7 @@ class Signup extends Component {
                                 <input ref={this.lastnameRef} className="inputlastname" type="text" placeholder="Last Name" required />
                             </div>
                             <input ref={this.emailRef} type="email" placeholder="Email" required />
-                            <input ref={this.passwordRef} type="password" placeholder="Password (Min 8 char)" required />
+                            <input ref={this.passwordRef} type="password" placeholder="Password" required />
                             <input ref={this.retypepasswordRef} type="password" placeholder="Confirm password" required />
                         </div>
                         <div className="right">
