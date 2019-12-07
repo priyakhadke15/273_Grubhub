@@ -45,7 +45,7 @@ class SiteDescription extends Component {
             <div>
                 {this.props.isLoggedIn && (
                     <div>
-                        <div className="hero container" style={{ width: "100%", backgroundColor: "rgba(255,255,255,0.5)", backgroundBlendMode: "overlay", backgroundImage: 'url("/food1.jpg")', backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
+                        <div className="hero container" style={{ width: "100%", backgroundColor: "rgba(255,255,255,0.5)", backgroundBlendMode: "overlay", backgroundImage: 'url("/food1.jpg")', backgroundRepeat: "no-repeat", backgroundSize: "cover", colour: "azure" }}>
                             <div className="contact-form" style={{ width: "80%", "margin": "0 auto" }}>
                                 <form onSubmit={this.search.bind(this)}>
                                     <select ref={this.cuisineRef} style={{ width: "20%", marginRight: "20px" }}>
@@ -88,14 +88,14 @@ class SiteDescription extends Component {
                     </div>
                 )}
                 {!this.props.isLoggedIn && (
-                    <div className="hero" style={{ width: "100%", backgroundColor: "rgba(255,255,255,0.5)", backgroundBlendMode: "overlay", backgroundImage: 'url("/food1.jpg")', backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
+                    <div className="hero" style={{ width: "100%", backgroundColor: "rgba(255,255,255,0.5)", backgroundBlendMode: "overlay", backgroundImage: 'url("/food1.jpg")', backgroundRepeat: "no-repeat", backgroundSize: "cover", fontweight: "600", colour: "azure" }}>
                         <div className="container">
-                            <h1 className="site-title">GrubHub</h1>
+                            <h1 className="site-title" style={{ colour: "black" }} >GrubHub</h1>
                             <small className="site-description">How to order food ? with GrubHub its easy</small>
                         </div>
                         <div className="row">
                             <div className="col-md-4">
-                                <div className="feature color-purple">
+                                <div className="feature color-purple" >
                                     <img style={{ paddingTop: "0px", padding: "40px" }} className="feature-icon" src="/search.png"></img>
                                     <h3 className="feature-title">Where</h3>
                                     <p>Browse menus from local restaurants</p>

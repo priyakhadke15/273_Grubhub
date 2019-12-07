@@ -7,7 +7,7 @@ class SiteHeader extends Component {
         return (
             <div className="site-header">
                 <div className="container">
-                    <h1 className="site-title"><Link to="/Home">GrubHub</Link></h1>
+                    <h1 style={{ colour: 'azure' }} className="site-title"><Link to="/Home">GrubHub</Link></h1>
                     <div className="mobile-navigation"></div>
                 </div>
             </div>

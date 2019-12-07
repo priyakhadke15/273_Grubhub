@@ -1,0 +1,87 @@
+Person ( isSeller - Owner or Buyer)
+for buyer - Name, Email and password,Profile Image, Phone Number
+for seller - Name, Email, password, Profile Image,Phone number
+
+
+Restaurant - Restaurant name, Restaurant
+Zip Code,Restaurant Image, Cuisine
+
+Items (ItemID,Name,Description,Price,Image,sec name,restID)
+Cart 
+Orders (orderID,orderDate,restaurantId,id,deliveryAdd,status)
+OrderDetail(orderID,itemID,quantity,price,totalprice)
+
+
+CREATE TABLE Persons (
+    id varchar(255) PRIMARY KEY NOT NULL,
+    email varchar(255) NOT NULL,
+    password varchar(255) NOT NULL,
+    firstName varchar(255) NOT NULL,
+    lastName varchar(255) NOT NULL,
+    profileImage varchar(255),
+    isSeller boolean DEFAULT false
+);
+CREATE TABLE Restaurants (
+    restaurantId varchar(255) PRIMARY KEY NOT NULL,
+    ownerId varchar(255) references Persons(id) NOT NULL,
+    image varchar(255),
+    address varchar(255),
+    cuisine varchar(255),
+    zipcode int
+);
+ALTER TABLE Restaurants
+ADD COLUMN name VARCHAR(255) AFTER ownerId;
+
+CREATE TABLE Items
+(
+itemID varchar(255) PRIMARY KEY NOT NULL,
+restaurantId varchar(255) references Restaurants(restaurantId) NOT NULL,
+itemName varchar(255),
+iDesc varchar(255),
+price double,
+iImage varchar(255),
+secName varchar(255)
+);
+
+CREATE TABLE Cuisine (
+cuisineName varchar(255) PRIMARY KEY NOT NULL,
+image VARCHAR(255)
+);
+
+CREATE TABLE Orders(
+orderID varchar(255) PRIMARY KEY NOT NULL,
+restaurantId varchar(255) references Restaurants(restaurantId),
+buyerId varchar(255) references Persons(id),
+orderDate DATETIME,
+deliveryAdd varchar(255),
+status varchar(255),
+price double
+);
+CREATE TABLE OrderDetails(
+orderID varchar(255) PRIMARY KEY NOT NULL references Orders(orderID),
+itemID varchar(255) PRIMARY KEY NOT NULL references Items(itemID),
+quantity double,
+itemprice double references Items(price),
+totalprice double 
+);
+---------------------------------------------------------------
+insert into Items (if (price) {
+        clause.push(`price='${price}'`);
+    }) VALUES ('cdf5b752-4b43-4457-adf6-81d83835bf66','cdf5b752-4b43-4457-adf6-81d83835bf65','Garlic Fries','Garlic Fries','4.55','lunch');
+insert into Items (itemID,restaurantId,itemName,iDesc,price,secName) VALUES ('cdf5b752-4b43-4457-adf6-81d83835bf68','1f8e3577-3ee7-4373-b4a8-fe8534d3d317','Plum Muffins','Plum muffins','2.60','breakfast');
+insert into Items (itemID,restaurantId,itemName,iDesc,price,secName) VALUES ('cdf5b752-4b43-4457-adf6-81d83835bf67','cdf5b752-4b43-4457-adf6-81d83835bf65','Ice Tea','Lemon Ice Tea','3.23','lunch');
+
+insert into Cuisine (cuisineName) values ('Asian');
+
+insert into Orders (orderID,restaurantId,buyerId,orderDate,deliveryAdd,status,price) VALUES ('cdf5b752-4b43-4457-adf6-81d83835bf68','cdf5b752-4b43-4457-adf6-81d83835bf65','63f2f41a-dd6b-4416-ba7f-8fd5170853bc','2019/09/24','San Jose','New','3.23');
+
+insert into OrderDetails (orderID,itemID,quantity,itemprice,totalprice)
+values ('cdf5b752-4b43-4457-adf6-81d83835bf68','6a54fdcc-2b15-4649-a20d-c47450ae7fa8','1','7.65','7.65');
+insert into OrderDetails (orderID,itemID,quantity,itemprice,totalprice)
+values ('cdf5b752-4b43-4457-adf6-81d83835bf68','cdf5b752-4b43-4457-adf6-81d83835bf65','1','3.23','3.23');
+
+
+
+
+
+
